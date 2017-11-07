@@ -15,7 +15,7 @@ object morty {
 	
 	method energia() = energia 
 	
-	method elementos() = mochila
+	method elementosDeLaMochila() = mochila
 	
 	method recolectar(unMaterial) {
 		if (! self.puedeRecolectar(unMaterial)) {
@@ -28,11 +28,36 @@ object morty {
 		}
 	}
 	
-	method puedeRecolectar(unMaterial) = unMaterial.requisitoParaSerColectado(self)
+	method puedeRecolectar(unMaterial) = self.elementosDeLaMochila().size() < 3 and unMaterial.requisitoParaSerColectado(self)
 	
 	method darObjetosA(unCompanero){
-		unCompanero.recibir(self.elementos())
+		unCompanero.recibir(self.elementosDeLaMochila())
+		mochila.removeAll(self.elementosDeLaMochila())
 	}
+}
+
+object rick{
+	
+	var mochila = #{}
+	var experimentos =#{}
+	
+	method recibir(unosMateriales){
+		mochila.addAll(unosMateriales)
+	}
+	
+	
+	method  experimentosQuePuedeRealizar(){
+		return experimentos.filter({experimento => experimento.requerimiento(self)})
+	}
+	
+	
+	method realizar(unExperimento){
+		
+	}
+	
+	method mochila() = mochila
+	
+
 }
 
 
@@ -129,48 +154,26 @@ class MateriaOscura inherits Material {
 }
 
 
-object rick{
-	
-	var mochila = #{}
-	var experimentos =#{}
-	
-	method recibir(unosMateriales){
-		mochila.addAll(unosMateriales)
-	}
-	
-	
-	method  experimentosQuePuedeRealizar(){
-		return experimentos.filter({experimento => experimento.requerimiento(self)})
-	}
-	
-	
-	
-	method realizar(unExperimento){
-		
-	}
-	
-	method mochila() = mochila
-	
-	/**  Para realizar un experimento se cumplen los siguientes pasos:
-○ Se buscan los materiales necesarios de la mochila de Rick
-○ Se remueven los materiales de la mochila de Rick.
-○ Se aplica el efecto del experimento, por ejemplo si se trata de la construcción de la
-batería, se debe agregar una nueva batería a la mochila de Rick, pero si se trata de un
-shock eléctrico se debe incrementar la energía del compañero de Rick.*/
-}
+
+
+//-------Experimentos-------//
 
 class Experimento inherits Material{
 	
-	method requerimiento(unPersonaje)
+	method requerimientoParaSerCreado(unPersonaje)
+	
 }
+
 
 class Bateria inherits Experimento {
 	
 	
-	 override method requerimiento(unPersonaje){
+	 override method requerimientoParaSerCreado(unPersonaje){
 		return  unPersonaje.mochila().any({material => material.gramosMetal()>200}) 
 				and unPersonaje.mochila().any({material => material.esRadioactivo()})
 	}
+	
+
 	
 	override method gramosMetal() {
 		

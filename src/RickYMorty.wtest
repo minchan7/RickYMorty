@@ -6,9 +6,9 @@ describe "materiales" {
 	const cable = new Cable(5,4) 
 	const fleeb = new Fleeb(45)
 			
-	test "energia conducida de una lata" {
+	test "electricidad conducida de una lata" {
 
-		assert.equals(5,lata.electricidadConducida())
+		assert.equals(20.1,lata.electricidadConducida())
 
 	}
 	
@@ -20,24 +20,20 @@ describe "materiales" {
 	
 	test"morty recolecta una lata "{
 		
-		morty.aumentarEnergia(150)		
+		morty.aumentarEnergia(350)		
 		morty.recolectar(lata)
-		assert.that(morty.elementos().contains(lata))
+		assert.that(morty.elementosDeLaMochila().contains(lata))
 	}
 	
-	test "requerimientos" {
+	test "requerimiento de una Bateria " {
+		
 		var material = new Bateria()
-		material.agregar(#{lata,fleeb})
+		rick.recibir(#{lata,fleeb})
 		
-		assert.that(material.requerimiento())
+		assert.that(material.requerimientoParaSerCreado(rick))
 		
 	}
 	
-	/*test"morty recolecta un material radioactivo "{
-		
-		morty.aumentarEnergia(100)
-		morty.recolectar(fleeb)
-	}
-	*/
+	
 }
 

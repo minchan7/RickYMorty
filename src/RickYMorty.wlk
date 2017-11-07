@@ -44,7 +44,7 @@ class Material {
 	
 	method energiaProducida() = 0
 	
-	method electricidadConducida()
+	method electricidadConducida() = 0
 	
 	method esRadioactivo()= false
 	
@@ -140,7 +140,7 @@ object rick{
 	
 	
 	method  experimentosQuePuedeRealizar(){
-		
+		return experimentos.filter({experimento => experimento.requerimiento(self)})
 	}
 	
 	
@@ -161,18 +161,22 @@ shock eléctrico se debe incrementar la energía del compañero de Rick.*/
 
 class Experimento inherits Material{
 	
-	method requerimientoParaConstruirse(unPersonaje)
+	method requerimiento(unPersonaje)
 }
 
 class Bateria inherits Experimento {
 	
 	
-	 override method requerimientoParaConstruirse(unPersonaje){
-		return  unPersonaje.mochila().any({material=> material.gramosMetal()>200}) 
+	 override method requerimiento(unPersonaje){
+		return  unPersonaje.mochila().any({material => material.gramosMetal()>200}) 
 				and unPersonaje.mochila().any({material => material.esRadioactivo()})
 	}
 	
-	method 
+	override method gramosMetal() {
+		
+	}
+	
+	 
 	
 }
 

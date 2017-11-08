@@ -229,8 +229,6 @@ class Circuito inherits Experimento{
 		return unPersonaje.mochila().any({material => material.electricidadConducida() >= 5})
 	}
 	
-
-	
 	override method electricidadConducida() = self.electricidadConducidaComponentes() * 3
 	
 	method electricidadConducidaComponentes() = self.componentes().sum({material => material.electricidadConducida()})
@@ -240,7 +238,7 @@ class Circuito inherits Experimento{
 
 class ShockElectrico inherits Experimento {
 	
-	method energiaDelGenerador() 
+	method energiaDelGenerador(){} 
 	
 	override method efecto(unPersonaje) {
 		unPersonaje.companero().aumentarEnergia()

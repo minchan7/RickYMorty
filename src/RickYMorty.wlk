@@ -238,7 +238,7 @@ class Circuito inherits Experimento{
 	override method esRadioactivo() = self.componentes().any({material => material.esRadioactivo()})
 }
 
-class ShockElectrico inherits Experimento{
+class ShockElectrico inherits Experimento {
 	
 	method energiaDelGenerador() 
 	

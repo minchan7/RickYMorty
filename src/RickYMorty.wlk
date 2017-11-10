@@ -287,4 +287,5 @@ class ConstruirShockElectrico inherits Experimento {
 		unPersonaje.companero().aumentarEnergia(generador.energiaProducida() * conductor.electricidadConducida())
 	}
 	
+	method()
 }

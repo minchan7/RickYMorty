@@ -260,10 +260,13 @@ class ConstruirCircuito inherits Experimento{
 		return unPersonaje.mochila().any({material => material.electricidadConducida() >= 5})
 	}
 	
+<<<<<<< HEAD
 	override method buscarMaterial(unPersonaje) {
 		return unPersonaje.mochila().filter({material => material.electricidadConducida() >= 5})
 	}
 	
+=======
+>>>>>>> branch 'master' of https://github.com/minchan7/RickYMorty.git
 	override method electricidadConducida() = self.electricidadConducidaComponentes() * 3
 	
 	method electricidadConducidaComponentes() = self.componentes().sum({material => material.electricidadConducida()})
@@ -273,8 +276,12 @@ class ConstruirCircuito inherits Experimento{
 
 class ConstruirShockElectrico inherits Experimento {
 	
+<<<<<<< HEAD
 	var generador
 	var conductor
+=======
+	method energiaDelGenerador(){} 
+>>>>>>> branch 'master' of https://github.com/minchan7/RickYMorty.git
 	
 	override method buscarMaterial(unPersonaje){
 		generador = unPersonaje.mochila().find({material => material.energiaProducida() > 0})

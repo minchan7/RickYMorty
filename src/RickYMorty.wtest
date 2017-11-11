@@ -2,20 +2,20 @@ import RickYMorty.*
 
 describe "materiales" {
 	
-	const lata = new Lata(201)
+	const lata = new Lata(250)
 	const cable = new Cable(5,4) 
 	const fleeb = new Fleeb(45)
 			
 	test "electricidad conducida de una lata" {
 
-		assert.equals(20.1,lata.electricidadConducida())
+		assert.equals(25,lata.electricidadConducida())
 
 	}
 	
 	test"morty no puede recolectar material "{
 		
 		morty.aumentarEnergia(25)
-		assert.throwsExceptionWithMessage("No posee energia suficiente para recoger el material", {morty.recolectar(lata)})
+		assert.throwsExceptionWithMessage("No tengo lugar en la mochila o energia suficiente para recolectar el material", {morty.recolectar(lata)})
 	}
 	
 	test"morty recolecta una lata "{
@@ -27,13 +27,17 @@ describe "materiales" {
 	
 	test "requerimiento de una Bateria " {
 		
-		var material = new Bateria()
 		rick.recibir(#{lata,fleeb})
 		
-		assert.that(material.requerimientoParaSerCreado(rick))
+		assert.that(construirBateria.requerimientoParaSerCreado(rick))
 		
 	}
 	
-	
+	test "que experimento puede realizar rick" {
+		
+		rick.recibir(#{lata,fleeb})
+		
+		assert.that(rick.experimentosQuePuedeRealizar().contains(construirBateria))
+	}
 }
 

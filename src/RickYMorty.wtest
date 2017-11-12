@@ -4,12 +4,11 @@ describe "materiales" {
 	
 	const lata = new Lata(250)
 	const cable = new Cable(5,4) 
-	const fleeb = new Fleeb(45)
+	const fleeb = new Fleeb(45,#{lata,cable})
 			
 	test "electricidad conducida de una lata" {
 
 		assert.equals(25,lata.electricidadConducida())
-
 	}
 	
 	test"morty no puede recolectar material "{
@@ -28,7 +27,6 @@ describe "materiales" {
 	test "requerimiento de una Bateria " {
 		
 		rick.recibir(#{lata,fleeb})
-		
 		assert.that(construirBateria.requerimientoParaSerCreado(rick))
 		
 	}
@@ -36,7 +34,6 @@ describe "materiales" {
 	test "que experimento puede realizar rick" {
 		
 		rick.recibir(#{lata,fleeb})
-		
 		assert.that(rick.experimentosQuePuedeRealizar().contains(construirBateria))
 	}
 }

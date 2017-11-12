@@ -52,7 +52,7 @@ object rick{
 		mochila.add(unMaterial)
 	}
 	
-	method  experimentosQuePuedeRealizar() = experimentos.filter({experimento => experimento.requerimientoParaSerCreado(self)})
+	method  experimentosQuePuedeRealizar() = experimentos.filter({experimento => experimento.requerimientoParaSerCreado(self.mochila())})
 	
 	
 	method realizar(unExperimento){
@@ -60,7 +60,7 @@ object rick{
 		if(!self.experimentosQuePuedeRealizar().contains(unExperimento)){
 			self.error("No puedo construir el experimento")
 		}
-		unExperimento.materialesParaSerCreado(self)
+		unExperimento.materialesParaSerCreado(self.mochila())
 		self.mochila().removeAll(unExperimento.componentes())
 		unExperimento.efectoDeCreacion(self)
 	}
@@ -83,7 +83,7 @@ object rick{
 
 //-------Materiales-------//
 
-class Material {
+class Material {  // clase abstracta
 	
 	method gramosMetal() 
 	
@@ -91,7 +91,7 @@ class Material {
 	
 	method electricidadConducida() = 0
 	
-	method esRadioactivo() = false
+	method esRadiactivo() = false
 	
 	method puedeSerRecolectado(unPersonaje) = unPersonaje.energia() >= self.energiaNecesariaParaSerRecolectada()
 
@@ -154,7 +154,7 @@ class Fleeb inherits Material {
 	
 	override method gramosMetal() = materialesConsumidos.sum({material => material.gramosMetal()})
 	
-	override method esRadioactivo() = edad > 15
+	override method esRadiactivo() = edad > 15
 	
 	override method energiaProducida() = self.materialQueMasEnergiaProduzca().energiaProducida()
 	
@@ -167,7 +167,7 @@ class Fleeb inherits Material {
 	override method energiaNecesariaParaSerRecolectada() = super() * 2
 	
 	override method cambioDeEnergia(unPersonaje){
-		if(!self.esRadioactivo()){
+		if(!self.esRadiactivo()){
 			unPersonaje.aumentarEnergia(10)
 		}
 	}
@@ -198,7 +198,7 @@ class MateriaOscura inherits Material {
 
 
 
-class MaterialesCreados inherits Material {
+class MaterialesCreados inherits Material {  // clase abstracta
 	
 	var componentes = #{}
 	
@@ -218,7 +218,7 @@ class Bateria inherits MaterialesCreados {
 	
 	override method energiaProducida() = self.gramosMetal() * 2
 	
-	override method esRadioactivo() = true
+	override method esRadiactivo() = true
 }
 
 class Circuito inherits MaterialesCreados {
@@ -228,27 +228,27 @@ class Circuito inherits MaterialesCreados {
 	
 	method electricidadConducidaComponentes() = self.componentes().sum({material => material.electricidadConducida()})
 		
-	override method esRadioactivo() = self.componentes().any({material => material.esRadioactivo()})	
+	override method esRadiactivo() = self.componentes().any({material => material.esRadiactivo()})	
 }
 
 
 
 //-------Experimentos-------//
 
-class Experimento {
+class Experimento { // clase abstracta
 	
 	
-	method requerimientoParaSerCreado(unPersonaje)
+	method requerimientoParaSerCreado(materiales)
 	
 	method efectoDeCreacion(unPersonaje)
 		
-	method materialesParaSerCreado(unPersonaje)
+	method materialesParaSerCreado(materiales)
 	
 }
 
 
 
-class CreacionDeMaterial inherits Experimento {
+class CreacionDeMaterial inherits Experimento { // clase abstracta
 	
 	var componentes = #{}
 	
@@ -266,14 +266,14 @@ class CreacionDeMaterial inherits Experimento {
 object construirBateria inherits CreacionDeMaterial {
 	
 	
-	 override method requerimientoParaSerCreado(unPersonaje){
-		return  unPersonaje.mochila().any({material => material.gramosMetal() >= 200}) 
-				and unPersonaje.mochila().any({material => material.esRadioactivo()})
+	 override method requerimientoParaSerCreado(materiales){
+		return  materiales.any({material => material.gramosMetal() >= 200}) 
+				and materiales.any({material => material.esRadiactivo()})
 	}
 	
-	override method materialesParaSerCreado(unPersonaje){
-		componentes.add(unPersonaje.mochila().find({material => material.gramosMetal() >= 200})) 
-		componentes.add(unPersonaje.mochila().find({material => material.esRadioactivo()}))
+	override method materialesParaSerCreado(materiales){
+		componentes.add(materiales.find({material => material.gramosMetal() >= 200})) 
+		componentes.add(materiales.find({material => material.esRadiactivo()}))
 	}
 	
 	override method efectoDeCreacion(unPersonaje) {
@@ -290,12 +290,12 @@ object construirBateria inherits CreacionDeMaterial {
 object construirCircuito inherits CreacionDeMaterial{
 	
 	
-	override method requerimientoParaSerCreado(unPersonaje) {
-		return unPersonaje.mochila().any({material => material.electricidadConducida() >= 5})
+	override method requerimientoParaSerCreado(materiales) {
+		return materiales.any({material => material.electricidadConducida() >= 5})
 	}
 	
-	override method materialesParaSerCreado(unPersonaje) {
-		componentes.addAll(unPersonaje.mochila().filter({material => material.electricidadConducida() >= 5}))
+	override method materialesParaSerCreado(materiales) {
+		componentes.addAll(materiales.filter({material => material.electricidadConducida() >= 5}))
 	}
 
 	override method materialConstruido() = new Circuito(self.componentes())
@@ -307,15 +307,15 @@ object construirShockElectrico inherits Experimento {
 	var generador
 	var conductor
 
-	override method requerimientoParaSerCreado(unPersonaje) {
-		return unPersonaje.mochila().any({ material => material.energiaProducida() > 0 }) 
-			and unPersonaje.mochila().any({ material => material.electricidadConducida() > 0 })
+	override method requerimientoParaSerCreado(materiales) {
+		return materiales.any({ material => material.energiaProducida() > 0 }) 
+			and materiales.any({ material => material.electricidadConducida() > 0 })
 	}
 	
-	override method materialesParaSerCreado(unPersonaje){
+	override method materialesParaSerCreado(materiales){
 		
-		generador = unPersonaje.mochila().find({material => material.energiaProducida() > 0})
-	 	conductor = unPersonaje.mochila().find({material => material.electricidadConducida() > 0})
+		generador = materiales.find({material => material.energiaProducida() > 0})
+	 	conductor = materiales.find({material => material.electricidadConducida() > 0})
 	 	
 	}
 	

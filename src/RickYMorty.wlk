@@ -295,7 +295,7 @@ object construirCircuito inherits CreacionDeMaterial{
 	}
 	
 	override method materialesParaSerCreado(unPersonaje) {
-		componentes.add(unPersonaje.mochila().filter({material => material.electricidadConducida() >= 5}))
+		componentes.addAll(unPersonaje.mochila().filter({material => material.electricidadConducida() >= 5}))
 	}
 
 	override method materialConstruido() = new Circuito(self.componentes())

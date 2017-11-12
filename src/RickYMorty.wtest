@@ -5,6 +5,7 @@ describe "materiales" {
 	const lata = new Lata(250)
 	const cable = new Cable(5,4) 
 	const fleeb = new Fleeb(45,#{lata,cable})
+	const materiaOscura = new MateriaOscura(cable)
 			
 	test "electricidad conducida de una lata" {
 
@@ -22,6 +23,7 @@ describe "materiales" {
 		morty.aumentarEnergia(350)		
 		morty.recolectar(lata)
 		assert.that(morty.elementosDeLaMochila().contains(lata))
+		assert.equals(100, morty.energia())
 	}
 	
 	test "requerimiento de una Bateria " {
@@ -36,5 +38,29 @@ describe "materiales" {
 		rick.recibir(#{lata,fleeb})
 		assert.that(rick.experimentosQuePuedeRealizar().contains(construirBateria))
 	}
+	
+	test "Morty le da sus materiales al compañero" {
+		//Chequeo energia
+		morty.aumentarEnergia(1000)
+		morty.recolectar(lata)
+		morty.recolectar(cable)
+		morty.recolectar(materiaOscura)
+		
+		assert.equals(749.96,morty.energia())
+		
+		morty.darObjetosA(rick)
+		
+		//Chequeo del traspaso de los items correctamente
+		
+		//Mochila vacia de morty
+		assert.that(morty.elementosDeLaMochila().isEmpty())
+		
+		//Mochila de rick con los items que tenia Morty		
+		assert.that(rick.mochila().contains(lata))
+		assert.that(rick.mochila().contains(cable))
+		assert.that(rick.mochila().contains(materiaOscura))
+		
+	}
+	
 }
 

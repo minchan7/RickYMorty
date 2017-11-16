@@ -1,4 +1,4 @@
-object morty {
+class Companero {
 	
 	var energia = 0
 	var mochila = #{}
@@ -21,20 +21,113 @@ object morty {
 	
 	method elementosDeLaMochila() = mochila
 	
-	method puedeRecolectar(unMaterial) = self.elementosDeLaMochila().size() < 3 and unMaterial.puedeSerRecolectado(self)
+	method puedeRecolectar(unMaterial) = self.tieneEspacioEnMochila() and self.tieneEnergiaNecesariaParaRecolectar(unMaterial)
+	
+	method tieneEspacioEnMochila() = self.elementosDeLaMochila().size() < self.capacidadDeLaMochila()
+	
+	method tieneEnergiaNecesariaParaRecolectar(unMaterial) = self.energia() > self.energiaNecesariaParaRecolectar(unMaterial)
+	
+	method capacidadDeLaMochila() = 3
+	
+	method energiaNecesariaParaRecolectar(unMaterial) = unMaterial.energiaNecesariaParaSerRecolectado()
 	
 	method recolectar(unMaterial) {
 		if (! self.puedeRecolectar(unMaterial)) {
 			self.error("No tengo lugar en la mochila o energia suficiente para recolectar el material")
 		} 
-		mochila.add(unMaterial)
-		self.disminuirEnergia(unMaterial.energiaNecesariaParaSerRecolectada())
+		self.elementosDeLaMochila().add(unMaterial)
+		self.disminuirEnergia(self.energiaNecesariaParaRecolectar(unMaterial))
 		unMaterial.cambioDeEnergia(self)
 	}
 	
 	method darObjetosA(unCompanero){
 		unCompanero.recibir(self.elementosDeLaMochila())
-		mochila.removeAll(self.elementosDeLaMochila())
+		self.elementosDeLaMochila().clear()
+	}
+	
+} 
+
+object morty inherits Companero {}
+
+object summer inherits Companero {
+	
+	override method capacidadDeLaMochila() = 2
+	
+	override method energiaNecesariaParaRecolectar(unMaterial) = super(unMaterial) * 0.8
+	
+	override method darObjetosA(unCompanero){
+		if(self.energia() < 10) {
+			self.error("No tengo energia suficiente para darle mis materiales a mi companero")
+		}
+		self.disminuirEnergia(10)
+		super(unCompanero)	
+	}
+}
+
+object jerry inherits Companero {
+	
+	var humor = buenHumor
+	
+	
+	method cambioDeHumor(_humor) {
+		humor = _humor
+	}
+	
+	override method elementosDeLaMochila() = humor.elementosDeLaMochila()
+	
+	override method capacidadDeLaMochila() = humor.capacidadDeLaMochila()
+	
+	override method recolectar(unMaterial) {
+		humor.recolectar(unMaterial)
+		if(unMaterial.esUnSerVivo()){
+			humor = buenHumor
+		}
+		if(unMaterial.esRadiactivo()){
+			humor = sobreexitado
+		}
+	}
+	
+	override method darObjetosA(unCompanero){
+		humor.darObjetosA(unCompanero)
+		humor = malHumor	
+	}
+		
+}
+
+class Humor inherits Companero{
+	
+	override method aumentarEnergia(unaCantidad) {
+		jerry.aumentarEnergia(unaCantidad) 
+	}
+	
+	override method disminuirEnergia(unaCantidad) {
+		jerry.disminuirEnergia(unaCantidad)
+	}
+	
+	override method energia() = jerry.energia()
+	
+	override method elementosDeLaMochila() = jerry.elementosDeLaMochila()
+	
+	
+}
+
+object buenHumor inherits Humor {}
+
+object malHumor inherits Humor {
+	
+	override method capacidadDeLaMochila() = 1
+	
+}
+
+object sobreexitado inherits Humor {
+	
+	override method capacidadDeLaMochila() = buenHumor*2
+	
+	override method recolectar(unMaterial) {
+		if(1.randomUpTo(4) > 1){
+			self.elementosDeLaMochila().clear()
+		}
+		super(unMaterial)
 	}
 }
 
@@ -93,9 +186,9 @@ class Material {  // clase abstracta
 	
 	method esRadiactivo() = false
 	
-	method puedeSerRecolectado(unPersonaje) = unPersonaje.energia() >= self.energiaNecesariaParaSerRecolectada()
-
-	method energiaNecesariaParaSerRecolectada() = self.gramosMetal()
+	method esUnSerVivo() = false
+	
+	method energiaNecesariaParaSerRecolectado() = self.gramosMetal()
 	
 	method cambioDeEnergia(unPersonaje) {}
 }
@@ -164,7 +257,9 @@ class Fleeb inherits Material {
 	
 	method materialQueMenosElectricidadConduzca() = materialesConsumidos.min({material => material.electricidadConducida()})
 
-	override method energiaNecesariaParaSerRecolectada() = super() * 2
+	override method energiaNecesariaParaSerRecolectado() = super() * 2
+	
+	override method esUnSerVivo() = true
 	
 	override method cambioDeEnergia(unPersonaje){
 		if(!self.esRadiactivo()){
@@ -188,6 +283,8 @@ class MateriaOscura inherits Material {
 	
 	override method energiaProducida() = materialBase.energiaProducida() * 2
 
+	override method esUnSerVivo() = materialBase.esUnSerVivo()
+	
 	override method cambioDeEnergia(unPersonaje){
 		materialBase.cambioDeEnergia(unPersonaje)
 	}

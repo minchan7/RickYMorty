@@ -36,8 +36,8 @@ class Companero {
 			self.error("No tengo lugar en la mochila o energia suficiente para recolectar el material")
 		} 
 		self.elementosDeLaMochila().add(unMaterial)
-		self.disminuirEnergia(self.energiaNecesariaParaRecolectar(unMaterial))
-		unMaterial.cambioDeEnergia(self)
+		unMaterial.aplicarEfecto(self)
+		
 	}
 	
 	method darObjetosA(unCompanero){
@@ -94,7 +94,7 @@ object jerry inherits Companero {
 		
 }
 
-class Humor inherits Companero{
+class Humor inherits Companero {
 	
 	override method aumentarEnergia(unaCantidad) {
 		jerry.aumentarEnergia(unaCantidad) 
@@ -190,7 +190,10 @@ class Material {  // clase abstracta
 	
 	method energiaNecesariaParaSerRecolectado() = self.gramosMetal()
 	
-	method cambioDeEnergia(unPersonaje) {}
+	method aplicarEfecto(unPersonaje) {
+		
+		unPersonaje.disminuirEnergia(self.energiaNecesariaParaSerRecolectado())
+	}
 }
 
 class Lata inherits Material {	
@@ -261,7 +264,9 @@ class Fleeb inherits Material {
 	
 	override method esUnSerVivo() = true
 	
-	override method cambioDeEnergia(unPersonaje){
+	override method aplicarEfecto(unPersonaje){
+		super(unPersonaje)
+		
 		if(!self.esRadiactivo()){
 			unPersonaje.aumentarEnergia(10)
 		}
@@ -285,10 +290,100 @@ class MateriaOscura inherits Material {
 
 	override method esUnSerVivo() = materialBase.esUnSerVivo()
 	
-	override method cambioDeEnergia(unPersonaje){
-		materialBase.cambioDeEnergia(unPersonaje)
+	override method aplicarEfecto(unPersonaje){
+		
+		materialBase.aplicarEfecto(unPersonaje)
 	}
 
+}
+
+
+class ParasitoAlienigena inherits Material {
+	
+	const accionesForzadas
+	
+	constructor(conjuntoAcciones) {
+		accionesForzadas = conjuntoAcciones
+	}
+	
+	override method gramosMetal() = 10
+	
+	override method energiaProducida() = 5
+	
+	override method aplicarEfecto(unPersonaje) {
+		
+		super(unPersonaje)
+		accionesForzadas.forEach({accion => accion.ejecutar(unPersonaje)})
+	}
+}
+
+//--------- Acciones de los parasitos ---------//
+
+object entregaObjetos {
+	
+  		method ejecutar(unPersonaje) {
+		unPersonaje.darObjetosA(unPersonaje.Companero())
+	}
+	
+}
+
+object descartaObjeto {
+	
+		method ejecutar(unPersonaje) {
+			
+			if(!unPersonaje.mochila().isEmpty()) {
+				
+				unPersonaje.mochila().remove(unPersonaje.mochila().anyOne())
+			}		
+		}
+	
+}
+
+class EfectoEnergia {
+	
+	const porcentajeEnergia 
+	
+	constructor(_porcentajeEnergia) {
+		
+		porcentajeEnergia = _porcentajeEnergia
+	}
+	
+	method ejecutar(unPersonaje) 
+	
+	method porcentajeDeEnergia(unPersonaje) = unPersonaje.energia() * porcentajeEnergia / 100 
+}
+
+class IncrementoDeEnergia inherits EfectoEnergia {
+	
+	override method ejecutar(unPersonaje) {
+		
+		unPersonaje.aumentarEnergia(self.porcentajeDeEnergia(unPersonaje))
+	}
+}
+
+class DecrementoDeEnergia inherits EfectoEnergia {
+	
+	override method ejecutar(unPersonaje) {
+		
+		unPersonaje.disminuirEnergia(self.porcentajeDeEnergia(unPersonaje))
+	}
+}
+
+class ElementoOculto {
+	
+	const elementoOculto
+	
+	constructor(_elementoOculto) {
+		elementoOculto = _elementoOculto
+	}
+	
+	method ejecutar(unPersonaje) {
+		if(unPersonaje.puedeRecolectar(elementoOculto)) {
+			
+			unPersonaje.recolectar(elementoOculto)
+		}
+		
+	}
 }
 
 //----- Materiales creados a partir de experimento-----//

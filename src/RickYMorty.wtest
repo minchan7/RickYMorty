@@ -120,6 +120,14 @@ describe "materiales" {
 			
 	}
 	
+	test"recoleccion de una parasito con acciones forzadas sobre la energia" {
+		
+		const parasito = new ParasitoAlienigena( #{new IncrementoDeEnergia(100), new DecrementoDeEnergia(50)} )
+		morty.aumentarEnergia(500)
+		morty.recolectar(parasito)
+		
+		assert.equals(1000-500-10,morty.energia())		
+	}
 	
 }
 

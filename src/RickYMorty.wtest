@@ -1,5 +1,8 @@
 import RickYMorty.*
 
+// TODO Estan bien los tests, tal vez me faltaría algún tests que verifique los efectos de un
+// experimento, por ejemplo luego de construir una batería Rick tiene un nuevo material
+// que puede usar para nuevos experimentos.
 describe "materiales" {
 	
 	const lata = new Lata(250)
@@ -27,7 +30,8 @@ describe "materiales" {
 		morty.recolectar(lata)
 		morty.recolectar(cable)
 		morty.recolectar(materiaOscura)
-		
+
+		// TODO Este assert podría estar en un test aparte.		
 		assert.equals(746,morty.energia())
 		
 		morty.darObjetosA(rick)
@@ -53,11 +57,13 @@ describe "materiales" {
 	test "rick no puede construir experimento" {
 		
 		rick.recibir(#{lata,fleeb})
+		// TODO No sería mejor "realizar" en lugar de "construir"?
 		assert.throwsExceptionWithMessage("No puedo construir el experimento", {rick.realizar(construirShockElectrico)})
 	}
 	
 	test "electricidad conducida de una lata, energia producida de lata" {
 		
+		// TODO ¿Por qué no 'assert.equals(0, lata.energiaProducida())' ?
 		assert.notThat(lata.energiaProducida() > 0)
 		assert.equals(25,lata.electricidadConducida())
 	}
@@ -65,6 +71,9 @@ describe "materiales" {
 	test "radiactividad de cable, electricidad conducida de cable " {
 	
 		assert.notThat(cable.esRadiactivo())
+		// TODO Muchos números que salen de la nada, sería mejor poner la cuenta que hicieron.
+		// En este caso: 3 * 40 o algo así.
+		// O también un comentario podría ayudar.
 		assert.equals(120,cable.electricidadConducida())	
 	}
 	

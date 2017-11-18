@@ -1,3 +1,4 @@
+// TODO Dividan este archivo en partes más pequeñas porque si no es muy difícil de manejar. 
 object morty {
 	
 	var energia = 0
@@ -19,6 +20,9 @@ object morty {
 	
 	method energia() = energia 
 	
+	// TODO Este método no hace básicamente nada y tampoco se usa en otros objetos, sólo
+	// Internamente y en un test, me pregunto si no sería mejor sacarlo y acceder a la mochila
+	// directamente.
 	method elementosDeLaMochila() = mochila
 	
 	method puedeRecolectar(unMaterial) = self.elementosDeLaMochila().size() < 3 and unMaterial.puedeSerRecolectado(self)
@@ -28,6 +32,11 @@ object morty {
 			self.error("No tengo lugar en la mochila o energia suficiente para recolectar el material")
 		} 
 		mochila.add(unMaterial)
+		
+		// TODO Estas dos responsabilidades están muy relacionadas, sería mejor unirlas en un solo método, 
+		// y delegar la responsabilidad en el material.
+		// También sería mejor que el material sólo me diga la energía que quita/otorga en lugar de modificar 
+		// directamente la energía del personaje.
 		self.disminuirEnergia(unMaterial.energiaNecesariaParaSerRecolectada())
 		unMaterial.cambioDeEnergia(self)
 	}
@@ -60,6 +69,8 @@ object rick{
 		if(!self.experimentosQuePuedeRealizar().contains(unExperimento)){
 			self.error("No puedo construir el experimento")
 		}
+		// TODO sería mejor que las dos lineas siguientes no existieran y todo ocurriera
+		// dentro de "efectoDeCreación".
 		unExperimento.materialesParaSerCreado(self.mochila())
 		self.mochila().removeAll(unExperimento.componentes())
 		unExperimento.efectoDeCreacion(self)
@@ -96,7 +107,8 @@ class Material {  // clase abstracta
 	method puedeSerRecolectado(unPersonaje) = unPersonaje.energia() >= self.energiaNecesariaParaSerRecolectada()
 
 	method energiaNecesariaParaSerRecolectada() = self.gramosMetal()
-	
+
+	// TODO este nombre de método se podría mejorar, no es muy descriptivo
 	method cambioDeEnergia(unPersonaje) {}
 }
 
@@ -128,6 +140,8 @@ class Cable inherits Material {
 		
 	}
 	
+	// TODO En realidad está mal el enunciado, pero si la longitud es en metros y 
+	// la sección es en centímetros, entonces hay que dividir por 100 y no por 1000.
 	override method gramosMetal() = 1 * ((longitud / 1000) * seccion)
 	
 	override method electricidadConducida() =  3 * seccion
@@ -197,9 +211,8 @@ class MateriaOscura inherits Material {
 //----- Materiales creados a partir de experimento-----//
 
 
-
+// TODO Sería mejor MaterialCreado, todas las demás clases están en singular.
 class MaterialesCreados inherits Material {  // clase abstracta
-	
 	var componentes = #{}
 	
 	constructor (_componentes) {
@@ -248,14 +261,21 @@ class Experimento { // clase abstracta
 
 
 
-class CreacionDeMaterial inherits Experimento { // clase abstracta
-	
+class CreacionDeMaterial inherits Experimento { // clase abstracta	
+	// Si bien entiendo las motivaciones para poner esta variable, creo que finalmente termina
+	// no siendo una buena idea, complica varias cosas.
+	// Por un lado los experimentos ahora tienen estado y eso obliga a "resetearlos"
+	// luego de usarlos (ver #1)
+	// Por otro lado, hay un manejo de esta variable distribuido en varias clases (ver #2).
+	// Y finalmente obliga a que rick tenga mucho conocimiento 
+	// sobre la ejecución del experimento (ver #3).
 	var componentes = #{}
 	
 	method componentes() = componentes
 	
 	override method efectoDeCreacion(unPersonaje){
 		unPersonaje.agregarMaterial(self.materialConstruido())
+		// TODO Referencia #1
 		componentes.removeAll(self.componentes())
 	}
 	
@@ -272,6 +292,7 @@ object construirBateria inherits CreacionDeMaterial {
 	}
 	
 	override method materialesParaSerCreado(materiales){
+		// TODO Referencia #2
 		componentes.add(materiales.find({material => material.gramosMetal() >= 200})) 
 		componentes.add(materiales.find({material => material.esRadiactivo()}))
 	}
@@ -302,8 +323,7 @@ object construirCircuito inherits CreacionDeMaterial{
 
 }
 
-object construirShockElectrico inherits Experimento {
-	
+object construirShockElectrico inherits Experimento {	
 	var generador
 	var conductor
 

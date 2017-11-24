@@ -326,6 +326,8 @@ class ParasitoAlienigena inherits Material {
 		super(unPersonaje)
 		accionesForzadas.forEach({accion => accion.ejecutar(unPersonaje)})
 	}
+	
+	override method esUnSerVivo() = true
 }
 
 //--------- Acciones de los parasitos ---------//
@@ -450,7 +452,7 @@ class Experimento { // clase abstracta
 		
 	method materialesParaSerCreado(materiales,estrategia)
 	
-	method cumpleConRequisitos(mochila)
+	method cumpleConRequisitos(materiales)
 	
 }
 
@@ -478,7 +480,7 @@ object construirBateria inherits CreacionDeMaterial {
 	override method materialesParaSerCreado(materiales,estrategia){
 	
 		componentes.add(estrategia.seleccionarMaterial(self.primerRequisito(materiales)))                 
- 		componentes.add(estrategia.seleccionarMaterial(self.segundoRequisito(materiales))                 
+ 		componentes.add(estrategia.seleccionarMaterial(self.segundoRequisito(materiales)))              
 	}
 	
 	override method efectoDeCreacion(unPersonaje) {
@@ -488,19 +490,19 @@ object construirBateria inherits CreacionDeMaterial {
 	
 	override method materialConstruido() = new Bateria(self.componentes())
 	
-	override method cumpleConRequisitos(mochila){
+	override method cumpleConRequisitos(materiales){
 		
-		return self.primerRequisito(mochila) + self.segundoRequisito(mochila)
+		return self.primerRequisito(materiales) + self.segundoRequisito(materiales)
 	}
 	
-	method primerRequisito(mochila){
+	method primerRequisito(materiales){
 		
-		return mochila.filter({elemento => elemento.gramosMetal()>= 200})
+		return materiales.filter({elemento => elemento.gramosMetal()>= 200})
 	}
 	
-		method segundoRequisito(mochila){
+		method segundoRequisito(materiales){
 		
-		return mochila.filter({elemento => elemento.esRadiactivo()})
+		return materiales.filter({elemento => elemento.esRadiactivo()})
 	}
 	
 	
@@ -522,8 +524,8 @@ object construirCircuito inherits CreacionDeMaterial{
 
 	override method materialConstruido() = new Circuito(self.componentes())
 	
-	override method cumpleConRequisitos(mochila){
-		return mochila.filter({material => material.electricidadConducida() >= 5})
+	override method cumpleConRequisitos(materiales){
+		return materiales.filter({material => material.electricidadConducida() >= 5})
 	}
 
 }
@@ -548,23 +550,23 @@ object construirShockElectrico inherits Experimento {
 		unPersonaje.companero().aumentarEnergia(generador.energiaProducida() * conductor.electricidadConducida())
 	}
 	
-	method requisitoGenerador(mochila){
+	method requisitoGenerador(materiales){
 		
-		return mochila.filter({material => material.energiaProducida() > 0})
+		return materiales.filter({material => material.energiaProducida() > 0})
 	}
 	
-		method requisitoConductor(mochila){
+		method requisitoConductor(materiales){
 		
-		return mochila.filter({material => material.electricidadConducida() > 0})
+		return materiales.filter({material => material.electricidadConducida() > 0})
 	}
 	
-	override method cumpleConRequisitos(mochila){
+	override method cumpleConRequisitos(materiales){
 		
-		return self.requisitoGenerador(mochila) + self.requisitoConductor(mochila)
+		return self.requisitoGenerador(materiales) + self.requisitoConductor(materiales)
 	
 	}
 	
-	override componentes() = #{generador, conductor}
+	override method componentes() = #{generador, conductor}
 	
 	}
 
@@ -588,10 +590,10 @@ object menorCantidadDeMetal inherits Estrategia{
 	
 object mejorGeneradorElectrico inherits Estrategia{
 		
-	
 		
 	override method seleccionarMaterial(mochila) = mochila.max({elemento => elemento.energiaProducida()})
 	
+	}
 	
 object ecologico inherits Estrategia{
 	
@@ -600,5 +602,6 @@ object ecologico inherits Estrategia{
 	
 		return mochila.findOrElse({elemento => elemento.esUnSerVivo()}, {mochila.findOrDefault({elemento => !elemento.esRadiactivo()},mochila.anyOne())})
 	}
+}
 
 	

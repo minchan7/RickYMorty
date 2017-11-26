@@ -32,9 +32,7 @@ class Companero {
 	method energiaNecesariaParaRecolectar(unMaterial) = unMaterial.energiaNecesariaParaSerRecolectado()
 	
 	method recolectar(unMaterial) {
-		if (! self.puedeRecolectar(unMaterial)) {
-			self.error("No tengo lugar en la mochila o energia suficiente para recolectar el material")
-		} 
+		self.verificarSiPuedeRecolectar(unMaterial) 
 		self.elementosDeLaMochila().add(unMaterial)
 		unMaterial.aplicarEfecto(self)
 	}
@@ -42,6 +40,23 @@ class Companero {
 	method darObjetosA(unCompanero){
 		unCompanero.recibir(self.elementosDeLaMochila())
 		self.elementosDeLaMochila().clear()
+	}
+	
+	method verificarSiPuedeRecolectar(unMaterial){//mensaje para especificar que error lanza
+		self.verificarSiTengoEspacioEnMochila()
+		self.verificarSiTengoEnergiaParaRecolectar(unMaterial)
+	}
+	
+	method verificarSiTengoEspacioEnMochila(){
+		if(!self.tieneEspacioEnMochila()){
+			self.error("No tengo lugar en la mochila")
+		}
+	}
+	
+	method verificarSiTengoEnergiaParaRecolectar(unMaterial){
+		if(!self.tieneEnergiaNecesariaParaRecolectar(unMaterial)){
+			self.error("No tengo energia suficiente para recolectar el material")
+		}
 	}
 	
 } 

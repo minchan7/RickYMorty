@@ -13,7 +13,7 @@ describe "materiales" {
 	test "morty no puede recolectar material "{
 		
 		morty.aumentarEnergia(25)
-		assert.throwsExceptionWithMessage("No tengo lugar en la mochila o energia suficiente para recolectar el material", {morty.recolectar(lata)})
+		assert.throwsExceptionWithMessage("No tengo energia suficiente para recolectar el material", {morty.recolectar(lata)})
 	}
 	
 	test "morty recolecta una lata "{
@@ -156,7 +156,7 @@ describe "materiales" {
 		jerry.darObjetosA(rick)
 		jerry.recolectar(lata)
 		assert.equals(malHumor,jerry.humor())
-		assert.throwsExceptionWithMessage("No tengo lugar en la mochila o energia suficiente para recolectar el material", {jerry.recolectar(otraMateriaOscura)})
+		assert.throwsExceptionWithMessage("No tengo lugar en la mochila", {jerry.recolectar(otraMateriaOscura)})
 		
 	} 
 	

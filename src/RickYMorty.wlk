@@ -1,6 +1,6 @@
 class Companero {
 	
-	var energia = 0
+	var energia = 100
 	var mochila = #{}
 	
 	method aumentarEnergia(unaCantidad) {
@@ -23,11 +23,11 @@ class Companero {
 	
 	method puedeRecolectar(unMaterial) = self.tieneEspacioEnMochila() and self.tieneEnergiaNecesariaParaRecolectar(unMaterial)
 	
-	method tieneEspacioEnMochila() = self.elementosDeLaMochila().size() < self.capacidadDeLaMochila()
+	method tieneEspacioEnMochila() = self.elementosDeLaMochila().size() < self.capacidadMaximaDeMochila()
 	
 	method tieneEnergiaNecesariaParaRecolectar(unMaterial) = self.energia() > self.energiaNecesariaParaRecolectar(unMaterial)
 	
-	method capacidadDeLaMochila() = 3
+	method capacidadMaximaDeMochila() = 3
 	
 	method energiaNecesariaParaRecolectar(unMaterial) = unMaterial.energiaNecesariaParaSerRecolectado()
 	
@@ -37,7 +37,6 @@ class Companero {
 		} 
 		self.elementosDeLaMochila().add(unMaterial)
 		unMaterial.aplicarEfecto(self)
-		
 	}
 	
 	method darObjetosA(unCompanero){
@@ -51,7 +50,7 @@ object morty inherits Companero {}
 
 object summer inherits Companero {
 	
-	override method capacidadDeLaMochila() = 2
+	override method capacidadMaximaDeMochila() = 2
 	
 	override method energiaNecesariaParaRecolectar(unMaterial) = super(unMaterial) * 0.8
 	
@@ -68,66 +67,59 @@ object jerry inherits Companero {
 	
 	var humor = buenHumor
 	
+	method humor() = humor
 	
 	method cambioDeHumor(_humor) {
 		humor = _humor
 	}
 	
-	override method elementosDeLaMochila() = humor.elementosDeLaMochila()
-	
-	override method capacidadDeLaMochila() = humor.capacidadDeLaMochila()
+	override method capacidadMaximaDeMochila() = self.humor().capacidadMaximaDeMochila()
 	
 	override method recolectar(unMaterial) {
-		humor.recolectar(unMaterial)
+		self.humor().recolectar(unMaterial,self)
+		super(unMaterial)
+		self.reaccionarAMaterial(unMaterial)
+	}
+	
+	method reaccionarAMaterial(unMaterial){
 		if(unMaterial.esUnSerVivo()){
-			humor = buenHumor
+			self.cambioDeHumor(buenHumor)
 		}
 		if(unMaterial.esRadiactivo()){
-			humor = sobreexitado
+			self.cambioDeHumor(sobreexitado)
 		}
 	}
 	
 	override method darObjetosA(unCompanero){
-		humor.darObjetosA(unCompanero)
-		humor = malHumor	
+		super(unCompanero)
+		self.cambioDeHumor(malHumor)	
 	}
 		
 }
 
-class Humor inherits Companero {
+class Humor {//clase abstracta
 	
-	override method aumentarEnergia(unaCantidad) {
-		jerry.aumentarEnergia(unaCantidad) 
-	}
+	method capacidadMaximaDeMochila() = 3
 	
-	override method disminuirEnergia(unaCantidad) {
-		jerry.disminuirEnergia(unaCantidad)
-	}
-	
-	override method energia() = jerry.energia()
-	
-	override method elementosDeLaMochila() = jerry.elementosDeLaMochila()
-	
-	
+	method recolectar(unMaterial,unaPersona){}
 }
 
 object buenHumor inherits Humor {}
 
 object malHumor inherits Humor {
 	
-	override method capacidadDeLaMochila() = 1
+	override method capacidadMaximaDeMochila() = 1
 	
 }
 
 object sobreexitado inherits Humor {
 	
-	override method capacidadDeLaMochila() = buenHumor*2
+	override method capacidadMaximaDeMochila() = super() * 2
 	
-	override method recolectar(unMaterial) {
-		if(1.randomUpTo(4) > 1){
-			self.elementosDeLaMochila().clear()
+	override method recolectar(unMaterial,unaPersona) {
+		if(1.randomUpTo(4) == 1){
+			unaPersona.elementosDeLaMochila().clear()
 		}
-		super(unMaterial)
 	}
 }
 
@@ -203,7 +195,7 @@ class Material {  // clase abstracta
 	
 	method aplicarEfecto(unPersonaje) {
 		
-		unPersonaje.disminuirEnergia(self.energiaNecesariaParaSerRecolectado())
+		unPersonaje.disminuirEnergia(unPersonaje.energiaNecesariaParaRecolectar(self))
 	}
 }
 

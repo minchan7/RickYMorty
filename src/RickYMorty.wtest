@@ -6,6 +6,9 @@ describe "materiales" {
 	const cable = new Cable(50,40) 
 	const fleeb = new Fleeb(45,#{lata})
 	const materiaOscura = new MateriaOscura(cable)
+	const otraMateriaOscura = new MateriaOscura(fleeb)
+	const parasito = new ParasitoAlienigena( #{new IncrementoDeEnergia(100), new DecrementoDeEnergia(50)} )
+	
 			
 	test "morty no puede recolectar material "{
 		
@@ -18,7 +21,7 @@ describe "materiales" {
 		morty.aumentarEnergia(350)		
 		morty.recolectar(lata)
 		assert.that(morty.elementosDeLaMochila().contains(lata))
-		assert.equals(100, morty.energia())
+		assert.equals(200, morty.energia())
 	}
 	
 	test "Morty le da sus materiales al companero" {
@@ -28,7 +31,7 @@ describe "materiales" {
 		morty.recolectar(cable)
 		morty.recolectar(materiaOscura)
 		
-		assert.equals(746,morty.energia())
+		assert.equals(846,morty.energia())
 		
 		morty.darObjetosA(rick)
 		
@@ -120,10 +123,76 @@ describe "materiales" {
 			
 	}
 	
+//-------Segunda entrega-------//	
+	
+	
+	test "capacidad de la mochila de summer,energia necesaria para recolectar material" {
+		
+		assert.equals(2,summer.capacidadMaximaDeMochila())
+		assert.equals(200,summer.energiaNecesariaParaRecolectar(lata))
+	}
+	
+	test "summer no tiene energia necesaria para dar objetos a rick" {
+		summer.disminuirEnergia(95)
+		assert.throwsExceptionWithMessage("No tengo energia suficiente para darle mis materiales a mi companero", {summer.darObjetosA(rick)})
+	}
+	
+	test "buen humor" {
+		assert.equals(3,buenHumor.capacidadMaximaDeMochila())
+	}
+	
+	test "mal humor" {
+		assert.equals(1,malHumor.capacidadMaximaDeMochila())
+	}
+	
+	test "sobreexitado" {
+		assert.equals(6,sobreexitado.capacidadMaximaDeMochila())
+	}
+	
+	test "jerry se pone de mal humor " {
+		
+		jerry.aumentarEnergia(300)
+		jerry.recolectar(cable)
+		jerry.darObjetosA(rick)
+		jerry.recolectar(lata)
+		assert.equals(malHumor,jerry.humor())
+		assert.throwsExceptionWithMessage("No tengo lugar en la mochila o energia suficiente para recolectar el material", {jerry.recolectar(otraMateriaOscura)})
+		
+	} 
+	
+	test "jerry sobreexitado "{
+		jerry.aumentarEnergia(1000)
+		jerry.recolectar(fleeb)
+		assert.equals(sobreexitado,jerry.humor())
+		
+	}
+	
+	test "jerry se pone de buen humor "{
+		
+		
+		jerry.cambioDeHumor(sobreexitado)
+		jerry.recolectar(parasito)
+		assert.equals(buenHumor,jerry.humor())
+		
+	}
+	
+	test "summer y morty recolectan materia oscura" {
+	
+		morty.energiaInicial(600)
+		summer.energiaInicial(600)
+		morty.recolectar(otraMateriaOscura)
+		summer.recolectar(otraMateriaOscura)
+		assert.equals(100,morty.energia())
+		assert.equals(200,summer.energia())
+	
+	}
+	
+	
+	
 	test"recoleccion de una parasito con acciones forzadas sobre la energia" {
 		
-		const parasito = new ParasitoAlienigena( #{new IncrementoDeEnergia(100), new DecrementoDeEnergia(50)} )
-		morty.aumentarEnergia(500)
+		
+		morty.aumentarEnergia(400)
 		morty.recolectar(parasito)
 		
 		assert.equals(1000-500-10,morty.energia())		
@@ -134,7 +203,7 @@ describe "materiales" {
 		rick.recibir(#{lata,fleeb,cable})
 		rick.realizar(construirBateria)
 		assert.equals(construirBateria.componentes().size(), 0)
-		assert.equals(rick.companero().energia(),-5)
+		assert.equals(rick.companero().energia(),95)
 		assert.that(construirBateria.requerimientoParaSerCreado(rick.mochila()))
 			
 	}
@@ -165,7 +234,7 @@ describe "materiales" {
 		rick.cambiarEstrategia(mejorGeneradorElectrico)
 		rick.realizar(construirBateria)
 		assert.equals(construirBateria.componentes().size(), 0)
-		assert.equals(rick.companero().energia(),-5)
+		assert.equals(rick.companero().energia(),95)
 		assert.that(construirBateria.requerimientoParaSerCreado(rick.mochila()))
 			
 	}

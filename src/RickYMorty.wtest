@@ -129,5 +129,49 @@ describe "materiales" {
 		assert.equals(1000-500-10,morty.energia())		
 	}
 	
+	test "realizar experimento seleccionando materiales al azar " {
+		
+		rick.recibir(#{lata,fleeb,cable})
+		rick.realizar(construirBateria)
+		assert.equals(construirBateria.componentes().size(), 0)
+		assert.equals(rick.companero().energia(),-5)
+		assert.that(construirBateria.requerimientoParaSerCreado(rick.mochila()))
+			
+	}
+	
+	test "realizar experimento cambiando la estrategia a ecologico" {
+		
+		rick.recibir(#{lata,fleeb,cable, materiaOscura})
+		rick.cambiarEstrategia(ecologico)
+		rick.realizar(construirCircuito)
+		assert.equals(construirCircuito.componentes().size(), 0)
+		assert.that(construirCircuito.requerimientoParaSerCreado(rick.mochila()))
+			
+	}
+	
+	test "realizar experimento con estrategia menorCantidadMetal" {
+		
+		rick.recibir(#{lata,fleeb,cable, materiaOscura})
+		rick.cambiarEstrategia(menorCantidadDeMetal)
+		rick.realizar(construirCircuito)
+		assert.equals(construirCircuito.componentes().size(), 0)
+		assert.that(construirCircuito.requerimientoParaSerCreado(rick.mochila()))
+			
+	}
+	
+	test "realizar experimento seleccionando el mejor generador electrico " {
+		
+		rick.recibir(#{lata,fleeb,cable})
+		rick.cambiarEstrategia(mejorGeneradorElectrico)
+		rick.realizar(construirBateria)
+		assert.equals(construirBateria.componentes().size(), 0)
+		assert.equals(rick.companero().energia(),-5)
+		assert.that(construirBateria.requerimientoParaSerCreado(rick.mochila()))
+			
+	}
+	
+	
 }
 
+	
+	

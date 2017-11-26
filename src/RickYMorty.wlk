@@ -342,7 +342,7 @@ class ParasitoAlienigena inherits Material {
 object entregaObjetos {
 	
   		method ejecutar(unPersonaje) {
-		unPersonaje.darObjetosA(unPersonaje.Companero())
+		unPersonaje.darObjetosA(rick)
 	}
 	
 }
@@ -351,9 +351,9 @@ object descartaObjeto {
 	
 		method ejecutar(unPersonaje) {
 			
-			if(!unPersonaje.mochila().isEmpty()) {
+			if(!unPersonaje.elementosDeLaMochila().isEmpty()) {
 				
-				unPersonaje.mochila().remove(unPersonaje.mochila().anyOne())
+				unPersonaje.elementosDeLaMochila().remove(unPersonaje.elementosDeLaMochila().anyOne())
 			}		
 		}
 	

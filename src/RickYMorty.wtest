@@ -8,8 +8,10 @@ describe "materiales" {
 	const materiaOscura = new MateriaOscura(cable)
 	const otraMateriaOscura = new MateriaOscura(fleeb)
 	const parasito = new ParasitoAlienigena( #{new IncrementoDeEnergia(100), new DecrementoDeEnergia(50)} )
-	
-			
+	const parasito2 = new ParasitoAlienigena(#{new ElementoOculto(cable)})
+	const parasito3 = new ParasitoAlienigena(#{descartaObjeto})
+	const parasito4 = new ParasitoAlienigena(#{entregaObjetos})
+		
 	test "morty no puede recolectar material "{
 		
 		morty.aumentarEnergia(25)
@@ -197,6 +199,34 @@ describe "materiales" {
 		
 		assert.equals(1000-500-10,morty.energia())		
 	}
+	
+	test "recoleccion de una parasito con acciones forzadas sobre recoger un elemento oculto" {
+		
+		morty.aumentarEnergia(400)
+		morty.recolectar(parasito2)
+		assert.that(morty.elementosDeLaMochila().contains(cable))
+		assert.that(morty.elementosDeLaMochila().contains(parasito2))
+	}
+	
+	test "recoleccion de una parasito con acciones forzadas sobre descartar un objeto"{
+		
+		morty.aumentarEnergia(400)
+		morty.recolectar(lata)
+		morty.recolectar(cable)
+		morty.recolectar(parasito3)
+		assert.equals(2 ,morty.elementosDeLaMochila().size())
+	}
+	
+	test "recoleccion de una parasito con acciones forzadas a entregar sus materiales a un compañero"{
+		
+		morty.aumentarEnergia(400)
+		morty.recolectar(lata)
+		morty.recolectar(cable)
+		morty.recolectar(parasito4)
+		assert.that(morty.elementosDeLaMochila().isEmpty())
+		assert.equals(3,rick.mochila().size())
+	}
+	
 	
 	test "realizar experimento seleccionando materiales al azar " {
 		

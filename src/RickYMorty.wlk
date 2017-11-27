@@ -37,11 +37,6 @@ class Companero {
 		unMaterial.aplicarEfecto(self)
 	}
 	
-	method darObjetosA(unCompanero){
-		unCompanero.recibir(self.elementosDeLaMochila())
-		self.elementosDeLaMochila().clear()
-	}
-	
 	method verificarSiPuedeRecolectar(unMaterial){//mensaje para especificar que error lanza
 		self.verificarSiTengoEspacioEnMochila()
 		self.verificarSiTengoEnergiaParaRecolectar(unMaterial)
@@ -58,6 +53,13 @@ class Companero {
 			self.error("No tengo energia suficiente para recolectar el material")
 		}
 	}
+	
+	method darObjetosA(unCompanero){
+		unCompanero.recibir(self.elementosDeLaMochila())
+		self.elementosDeLaMochila().clear()
+	}
+	
+	
 	
 } 
 
@@ -153,7 +155,7 @@ object rick{
 		mochila.add(unMaterial)
 	}
 	
-	method  experimentosQuePuedeRealizar() = experimentos.filter({experimento => experimento.requerimientoParaSerCreado(self.mochila())})
+	method experimentosQuePuedeRealizar() = experimentos.filter({experimento => experimento.requerimientoParaSerCreado(self.mochila())})
 	
 	
 	method realizar(unExperimento){
@@ -242,7 +244,7 @@ class Cable inherits Material {
 		
 	}
 	
-	override method gramosMetal() = 1 * ((longitud / 1000) * seccion)
+	override method gramosMetal() = (longitud / 100) * seccion //Modificacion por enunciado(metros a centimetros es dividido por 100)
 	
 	override method electricidadConducida() =  3 * seccion
 	
@@ -284,7 +286,6 @@ class Fleeb inherits Material {
 	
 	override method aplicarEfecto(unPersonaje){
 		super(unPersonaje)
-		
 		if(!self.esRadiactivo()){
 			unPersonaje.aumentarEnergia(10)
 		}

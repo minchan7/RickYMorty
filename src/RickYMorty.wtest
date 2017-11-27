@@ -6,6 +6,9 @@ describe "materiales" {
 	const cable = new Cable(50,40) 
 	const fleeb = new Fleeb(45,#{lata})
 	const materiaOscura = new MateriaOscura(cable)
+	const bateria = new Bateria(#{lata,cable})
+	const circuito = new Circuito(#{lata,cable})
+	
 	const otraMateriaOscura = new MateriaOscura(fleeb)
 	const parasito = new ParasitoAlienigena( #{new IncrementoDeEnergia(100), new DecrementoDeEnergia(50)} )
 	const parasito2 = new ParasitoAlienigena(#{new ElementoOculto(cable)})
@@ -33,7 +36,7 @@ describe "materiales" {
 		morty.recolectar(cable)
 		morty.recolectar(materiaOscura)
 		
-		assert.equals(846,morty.energia())
+		assert.equals(810,morty.energia())
 		
 		morty.darObjetosA(rick)
 		
@@ -77,7 +80,7 @@ describe "materiales" {
 		
 		fleeb.comerMaterial(materiaOscura)
 		assert.that(fleeb.esRadiactivo())
-		assert.equals(252,fleeb.gramosMetal())
+		assert.equals(270,fleeb.gramosMetal())
 	}
 	
 	test "energia producida de  materiaOscura, electricidad conducida de materiaOscura" {
@@ -88,18 +91,14 @@ describe "materiales" {
 	
 	test "bateria" {
 		
-		const bateria = new Bateria(#{lata,cable})
-		
-		assert.equals(252,bateria.gramosMetal())
+		assert.equals(270,bateria.gramosMetal())
 		assert.that(bateria.esRadiactivo())
-		assert.equals(504,bateria.energiaProducida()) 
+		assert.equals(540,bateria.energiaProducida()) 
 	}
 	
 	test "circuito" {
 		
-		const circuito = new Circuito(#{lata,cable})
-		
-		assert.equals(252,circuito.gramosMetal())
+		assert.equals(270,circuito.gramosMetal())
 		assert.notThat(circuito.esRadiactivo())
 		assert.equals(435,circuito.electricidadConducida())
 	}
@@ -171,7 +170,6 @@ describe "materiales" {
 	
 	test "jerry se pone de buen humor "{
 		
-		
 		jerry.cambioDeHumor(sobreexitado)
 		jerry.recolectar(parasito)
 		assert.equals(buenHumor,jerry.humor())
@@ -189,7 +187,25 @@ describe "materiales" {
 	
 	}
 	
+	test "morty recolecta fleeb y da objeto a rick"{
+		morty.energiaInicial(700)
+		morty.recolectar(fleeb)
+		morty.darObjetosA(rick)
+		assert.that(morty.elementosDeLaMochila().isEmpty())
+	}
 	
+	test "summer recolecta cable y da objeto a rick"{
+		summer.recolectar(cable)
+		summer.darObjetosA(rick)
+		assert.that(summer.elementosDeLaMochila().isEmpty())	
+	}
+	
+	test "jerry recolecta lata y da objetos a rick"{
+		jerry.energiaInicial(300)
+		jerry.recolectar(lata)
+		jerry.darObjetosA(rick)
+		assert.that(jerry.elementosDeLaMochila().isEmpty())
+	}
 	
 	test"recoleccion de una parasito con acciones forzadas sobre la energia" {
 		

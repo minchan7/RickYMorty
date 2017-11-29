@@ -1,4 +1,11 @@
-import RickYMorty.*
+import companero.*
+import summer.*
+import jerry.*
+import humor.*
+import rick.*
+import material.*
+import experimento.*
+import estrategia.*
 
 describe "materiales" {
 	
@@ -26,7 +33,7 @@ describe "materiales" {
 		morty.aumentarEnergia(350)		
 		morty.recolectar(lata)
 		assert.that(morty.elementosDeLaMochila().contains(lata))
-		assert.equals(200, morty.energia())
+		assert.equals(100+350-250, morty.energia())
 	}
 	
 	test "Morty le da sus materiales al companero" {
@@ -36,7 +43,7 @@ describe "materiales" {
 		morty.recolectar(cable)
 		morty.recolectar(materiaOscura)
 		
-		assert.equals(810,morty.energia())
+		assert.equals(100+1000-250-20-20,morty.energia())// test aparte
 		
 		morty.darObjetosA(rick)
 		
@@ -61,46 +68,46 @@ describe "materiales" {
 	test "rick no puede construir experimento" {
 		
 		rick.recibir(#{lata,fleeb})
-		assert.throwsExceptionWithMessage("No puedo construir el experimento", {rick.realizar(construirShockElectrico)})
+		assert.throwsExceptionWithMessage("No puedo realizar el experimento", {rick.realizar(construirShockElectrico)})
 	}
 	
 	test "electricidad conducida de una lata, energia producida de lata" {
 		
-		assert.notThat(lata.energiaProducida() > 0)
+		assert.equals(0, lata.energiaProducida())
 		assert.equals(25,lata.electricidadConducida())
 	}
 	
 	test "radiactividad de cable, electricidad conducida de cable " {
 	
 		assert.notThat(cable.esRadiactivo())
-		assert.equals(120,cable.electricidadConducida())	
+		assert.equals(3*40,cable.electricidadConducida())	
 	}
 	
 	test "radiactividad de fleeb, cantidad de metal que consumio fleeb " {
 		
 		fleeb.comerMaterial(materiaOscura)
 		assert.that(fleeb.esRadiactivo())
-		assert.equals(270,fleeb.gramosMetal())
+		assert.equals(250+20,fleeb.gramosMetal())
 	}
 	
-	test "energia producida de  materiaOscura, electricidad conducida de materiaOscura" {
+	test "energia producida de materiaOscura, electricidad conducida de materiaOscura" {
 		
 		assert.notThat(materiaOscura.energiaProducida() > 0)
-		assert.equals(60,materiaOscura.electricidadConducida())
+		assert.equals(3*40/2,materiaOscura.electricidadConducida())
 	}
 	
 	test "bateria" {
 		
-		assert.equals(270,bateria.gramosMetal())
+		assert.equals(20+250,bateria.gramosMetal())
 		assert.that(bateria.esRadiactivo())
-		assert.equals(540,bateria.energiaProducida()) 
+		assert.equals((20+250)*2,bateria.energiaProducida()) 
 	}
 	
 	test "circuito" {
 		
-		assert.equals(270,circuito.gramosMetal())
+		assert.equals(20+250,circuito.gramosMetal())
 		assert.notThat(circuito.esRadiactivo())
-		assert.equals(435,circuito.electricidadConducida())
+		assert.equals(((0.1*250)+(3*40))*3,circuito.electricidadConducida())
 	}
 	
 	test "requerimiento para construir una bateria " {
@@ -130,7 +137,7 @@ describe "materiales" {
 	test "capacidad de la mochila de summer,energia necesaria para recolectar material" {
 		
 		assert.equals(2,summer.capacidadMaximaDeMochila())
-		assert.equals(200,summer.energiaNecesariaParaRecolectar(lata))
+		assert.equals(250*0.8,summer.energiaNecesariaParaRecolectar(lata))
 	}
 	
 	test "summer no tiene energia necesaria para dar objetos a rick" {
@@ -182,8 +189,8 @@ describe "materiales" {
 		summer.energiaInicial(600)
 		morty.recolectar(otraMateriaOscura)
 		summer.recolectar(otraMateriaOscura)
-		assert.equals(100,morty.energia())
-		assert.equals(200,summer.energia())
+		assert.equals(600-250*2,morty.energia())
+		assert.equals(600-(250*2*0.8),summer.energia())
 	
 	}
 	
@@ -249,7 +256,7 @@ describe "materiales" {
 		rick.recibir(#{lata,fleeb,cable})
 		rick.realizar(construirBateria)
 		assert.equals(construirBateria.componentes().size(), 0)
-		assert.equals(rick.companero().energia(),95)
+		assert.equals(rick.companero().energia(),100-5)
 		assert.that(construirBateria.requerimientoParaSerCreado(rick.mochila()))
 			
 	}
@@ -280,7 +287,7 @@ describe "materiales" {
 		rick.cambiarEstrategia(mejorGeneradorElectrico)
 		rick.realizar(construirBateria)
 		assert.equals(construirBateria.componentes().size(), 0)
-		assert.equals(rick.companero().energia(),95)
+		assert.equals(rick.companero().energia(),100-5)
 		assert.that(construirBateria.requerimientoParaSerCreado(rick.mochila()))
 			
 	}

@@ -23,7 +23,7 @@ class Companero {
 	
 	method puedeRecolectar(unMaterial) = self.tieneEspacioEnMochila() and self.tieneEnergiaNecesariaParaRecolectar(unMaterial)
 	
-	method tieneEspacioEnMochila() = self.elementosDeLaMochila().size() < self.capacidadMaximaDeMochila()
+	method tieneEspacioEnMochila() = mochila.size() < self.capacidadMaximaDeMochila()
 	
 	method tieneEnergiaNecesariaParaRecolectar(unMaterial) = self.energia() > self.energiaNecesariaParaRecolectar(unMaterial)
 	
@@ -33,8 +33,8 @@ class Companero {
 	
 	method recolectar(unMaterial) {
 		self.verificarSiPuedeRecolectar(unMaterial) 
-		self.elementosDeLaMochila().add(unMaterial)
-		unMaterial.aplicarEfecto(self)
+		mochila.add(unMaterial)
+		self.disminuirEnergia(self.energiaNecesariaParaRecolectar(unMaterial))
 	}
 	
 	method verificarSiPuedeRecolectar(unMaterial){//mensaje para especificar que error lanza
@@ -55,8 +55,8 @@ class Companero {
 	}
 	
 	method darObjetosA(unCompanero){
-		unCompanero.recibir(self.elementosDeLaMochila())
-		self.elementosDeLaMochila().clear()
+		unCompanero.recibir(mochila)
+		mochila.clear()
 	}
 	
 	
@@ -90,10 +90,10 @@ object jerry inherits Companero {
 		humor = _humor
 	}
 	
-	override method capacidadMaximaDeMochila() = self.humor().capacidadMaximaDeMochila()
+	override method capacidadMaximaDeMochila() = humor.capacidadMaximaDeMochila()
 	
 	override method recolectar(unMaterial) {
-		self.humor().recolectar(unMaterial,self)
+		humor.recolectar(unMaterial,self)
 		super(unMaterial)
 		self.reaccionarAMaterial(unMaterial)
 	}
@@ -161,10 +161,8 @@ object rick{
 	method realizar(unExperimento){
 		
 		if(!self.experimentosQuePuedeRealizar().contains(unExperimento)){
-			self.error("No puedo construir el experimento")
+			self.error("No puedo realizar el experimento")
 		}
-		unExperimento.materialesParaSerCreado(self.materialesSegunExperimento(unExperimento),self.estrategia())
-		self.mochila().removeAll(unExperimento.componentes())
 		unExperimento.efectoDeCreacion(self)
 	}
 	
@@ -210,10 +208,6 @@ class Material {  // clase abstracta
 	
 	method energiaNecesariaParaSerRecolectado() = self.gramosMetal()
 	
-	method aplicarEfecto(unPersonaje) {
-		
-		unPersonaje.disminuirEnergia(unPersonaje.energiaNecesariaParaRecolectar(self))
-	}
 }
 
 class Lata inherits Material {	
@@ -280,16 +274,10 @@ class Fleeb inherits Material {
 	
 	method materialQueMenosElectricidadConduzca() = materialesConsumidos.min({material => material.electricidadConducida()})
 
-	override method energiaNecesariaParaSerRecolectado() = super() * 2
+	override method energiaNecesariaParaSerRecolectado() = super()*2
 	
 	override method esUnSerVivo() = true
 	
-	override method aplicarEfecto(unPersonaje){
-		super(unPersonaje)
-		if(!self.esRadiactivo()){
-			unPersonaje.aumentarEnergia(10)
-		}
-	}
 }
 
 class MateriaOscura inherits Material {
@@ -308,11 +296,6 @@ class MateriaOscura inherits Material {
 	override method energiaProducida() = materialBase.energiaProducida() * 2
 
 	override method esUnSerVivo() = materialBase.esUnSerVivo()
-	
-	override method aplicarEfecto(unPersonaje){
-		
-		materialBase.aplicarEfecto(unPersonaje)
-	}
 
 }
 
@@ -329,7 +312,7 @@ class ParasitoAlienigena inherits Material {
 	
 	override method energiaProducida() = 5
 	
-	override method aplicarEfecto(unPersonaje) {
+	override method aplicarEfecto(unPersonaje) {//Modificar por correccion
 		
 		super(unPersonaje)
 		accionesForzadas.forEach({accion => accion.ejecutar(unPersonaje)})
@@ -411,7 +394,7 @@ class ElementoOculto {
 
 
 
-class MaterialesCreados inherits Material {  // clase abstracta
+class MaterialCreado inherits Material {  // clase abstracta
 	
 	var componentes = #{}
 	
@@ -422,11 +405,11 @@ class MaterialesCreados inherits Material {  // clase abstracta
 	
 	method componentes() = componentes
 	
-	override method gramosMetal() = self.componentes().sum({componente => componente.gramosMetal()})
+	override method gramosMetal() = componentes.sum({componente => componente.gramosMetal()})
 
 }
 
-class Bateria inherits MaterialesCreados {
+class Bateria inherits MaterialCreado {
 	
 	
 	override method energiaProducida() = self.gramosMetal() * 2
@@ -434,14 +417,14 @@ class Bateria inherits MaterialesCreados {
 	override method esRadiactivo() = true
 }
 
-class Circuito inherits MaterialesCreados {
+class Circuito inherits MaterialCreado {
 
 		
 	override method electricidadConducida() = self.electricidadConducidaComponentes() * 3
 	
-	method electricidadConducidaComponentes() = self.componentes().sum({material => material.electricidadConducida()})
+	method electricidadConducidaComponentes() = componentes.sum({material => material.electricidadConducida()})
 		
-	override method esRadiactivo() = self.componentes().any({material => material.esRadiactivo()})	
+	override method esRadiactivo() = componentes.any({material => material.esRadiactivo()})	
 }
 
 
@@ -450,13 +433,16 @@ class Circuito inherits MaterialesCreados {
 
 class Experimento { // clase abstracta
 	
-	var componentes = #{}
+	var componentes = #{}//modificar por correcciones variable
 	
 	method componentes() = componentes
 	
 	method requerimientoParaSerCreado(materiales)
 	
-	method efectoDeCreacion(unPersonaje)
+	method efectoDeCreacion(unPersonaje) {
+		self.materialesParaSerCreado(unPersonaje.materialesSegunExperimento(self),unPersonaje.estrategia())
+		unPersonaje.elementosDeLaMochila().removeAll(self.componentes())
+	}
 		
 	method materialesParaSerCreado(materiales,estrategia)
 	
@@ -470,6 +456,7 @@ class CreacionDeMaterial inherits Experimento { // clase abstracta
 	
 	
 	override method efectoDeCreacion(unPersonaje){
+		super(unPersonaje)
 		unPersonaje.agregarMaterial(self.materialConstruido())
 		componentes.removeAll(self.componentes())
 	}
@@ -553,8 +540,8 @@ object construirShockElectrico inherits Experimento {
  	 	conductor = estrategia.seleccionarMaterial(self.requisitoConductor(materiales))	
 	}
 	
-		override method efectoDeCreacion(unPersonaje) {
-		
+	override method efectoDeCreacion(unPersonaje) {
+		super(unPersonaje)
 		unPersonaje.companero().aumentarEnergia(generador.energiaProducida() * conductor.electricidadConducida())
 	}
 	

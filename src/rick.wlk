@@ -45,10 +45,9 @@ object rick{
 	}
 	
 	method estrategia() = estrategia
-	
-	method materialesSegunExperimento(experimento){
-		
-		return experimento.cumpleConRequisitos(self.mochila())
-	}
 
-}
+	method materialesSegunExperimento(experimento) = experimento.cumpleConRequisitos(self.mochila())
+	
+}	
+	
+	

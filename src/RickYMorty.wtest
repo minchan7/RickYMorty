@@ -1,11 +1,12 @@
 import companero.*
-import summer.*
-import jerry.*
 import humor.*
 import rick.*
 import material.*
+import materialCreado.*
+import accionesForzadas.*
 import experimento.*
 import estrategia.*
+
 
 describe "materiales" {
 	
@@ -189,8 +190,8 @@ describe "materiales" {
 		summer.energiaInicial(600)
 		morty.recolectar(otraMateriaOscura)
 		summer.recolectar(otraMateriaOscura)
-		assert.equals(600-250*2,morty.energia())
-		assert.equals(600-(250*2*0.8),summer.energia())
+		assert.equals(350,morty.energia())
+		assert.equals(400,summer.energia())
 	
 	}
 	

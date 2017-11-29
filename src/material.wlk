@@ -1,10 +1,4 @@
-import companero.*
-import summer.*
-import jerry.*
-import humor.*
-import rick.*
-import experimento.*
-import estrategia.*
+import accionesForzadas.*
 
 class Material {  // clase abstracta
 	
@@ -19,6 +13,8 @@ class Material {  // clase abstracta
 	method esUnSerVivo() = false
 	
 	method energiaNecesariaParaSerRecolectado() = self.gramosMetal()
+	
+	method aplicarEfecto(unPersonaje){}
 	
 }
 
@@ -90,6 +86,12 @@ class Fleeb inherits Material {
 	
 	override method esUnSerVivo() = true
 	
+	override method aplicarEfecto(unPersonaje){
+		if(!self.esRadiactivo()){
+			unPersonaje.aumentarEnergia(10)
+		}
+	}
+	
 }
 
 class MateriaOscura inherits Material {
@@ -126,115 +128,11 @@ class ParasitoAlienigena inherits Material {
 	
 	override method aplicarEfecto(unPersonaje) {//Modificar por correccion
 		
-		super(unPersonaje)
 		accionesForzadas.forEach({accion => accion.ejecutar(unPersonaje)})
 	}
 	
 	override method esUnSerVivo() = true
 }
 
-//--------- Acciones de los parasitos ---------//
-
-object entregaObjetos {
-	
-  		method ejecutar(unPersonaje) {
-		unPersonaje.darObjetosA(rick)
-	}
-	
-}
-
-object descartaObjeto {
-	
-		method ejecutar(unPersonaje) {
-			
-			if(!unPersonaje.elementosDeLaMochila().isEmpty()) {
-				
-				unPersonaje.elementosDeLaMochila().remove(unPersonaje.elementosDeLaMochila().anyOne())
-			}		
-		}
-	
-}
-
-class EfectoEnergia {
-	
-	const porcentajeEnergia 
-	
-	constructor(_porcentajeEnergia) {
-		
-		porcentajeEnergia = _porcentajeEnergia
-	}
-	
-	method ejecutar(unPersonaje) 
-	
-	method porcentajeDeEnergia(unPersonaje) = unPersonaje.energia() * porcentajeEnergia / 100 
-}
-
-class IncrementoDeEnergia inherits EfectoEnergia {
-	
-	override method ejecutar(unPersonaje) {
-		
-		unPersonaje.aumentarEnergia(self.porcentajeDeEnergia(unPersonaje))
-	}
-}
-
-class DecrementoDeEnergia inherits EfectoEnergia {
-	
-	override method ejecutar(unPersonaje) {
-		
-		unPersonaje.disminuirEnergia(self.porcentajeDeEnergia(unPersonaje))
-	}
-}
-
-class ElementoOculto {
-	
-	const elementoOculto
-	
-	constructor(_elementoOculto) {
-		elementoOculto = _elementoOculto
-	}
-	
-	method ejecutar(unPersonaje) {
-		if(unPersonaje.puedeRecolectar(elementoOculto)) {
-			
-			unPersonaje.recolectar(elementoOculto)
-		}
-		
-	}
-}
-
-//----- Materiales creados a partir de experimento-----//
 
 
-
-class MaterialCreado inherits Material {  // clase abstracta
-	
-	var componentes = #{}
-	
-	constructor (_componentes) {
-		
-		componentes.addAll(_componentes)
-	}
-	
-	method componentes() = componentes
-	
-	override method gramosMetal() = componentes.sum({componente => componente.gramosMetal()})
-
-}
-
-class Bateria inherits MaterialCreado {
-	
-	
-	override method energiaProducida() = self.gramosMetal() * 2
-	
-	override method esRadiactivo() = true
-}
-
-class Circuito inherits MaterialCreado {
-
-		
-	override method electricidadConducida() = self.electricidadConducidaComponentes() * 3
-	
-	method electricidadConducidaComponentes() = componentes.sum({material => material.electricidadConducida()})
-		
-	override method esRadiactivo() = componentes.any({material => material.esRadiactivo()})	
-}

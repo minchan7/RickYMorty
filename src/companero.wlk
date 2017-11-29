@@ -1,11 +1,4 @@
-
-import summer.*
-import jerry.*
 import humor.*
-import rick.*
-import material.*
-import experimento.*
-import estrategia.*
 
 class Companero {
 	
@@ -44,6 +37,7 @@ class Companero {
 		self.verificarSiPuedeRecolectar(unMaterial) 
 		mochila.add(unMaterial)
 		self.disminuirEnergia(self.energiaNecesariaParaRecolectar(unMaterial))
+		unMaterial.aplicarEfecto(self)
 	}
 	
 	method verificarSiPuedeRecolectar(unMaterial){//mensaje para especificar que error lanza
@@ -75,6 +69,53 @@ class Companero {
 object morty inherits Companero {}
 
 
+object summer inherits Companero {
+	
+	override method capacidadMaximaDeMochila() = 2
+	
+	override method energiaNecesariaParaRecolectar(unMaterial) = super(unMaterial) * 0.8
+	
+	override method darObjetosA(unCompanero){
+		if(self.energia() < 10) {
+			self.error("No tengo energia suficiente para darle mis materiales a mi companero")
+		}
+		self.disminuirEnergia(10)
+		super(unCompanero)	
+	}
+}
 
+object jerry inherits Companero {
+	
+	var humor = buenHumor
+	
+	method humor() = humor
+	
+	method cambioDeHumor(_humor) {
+		humor = _humor
+	}
+	
+	override method capacidadMaximaDeMochila() = humor.capacidadMaximaDeMochila()
+	
+	override method recolectar(unMaterial) {
+		humor.recolectar(unMaterial,self)
+		super(unMaterial)
+		self.reaccionarAMaterial(unMaterial)
+	}
+	
+	method reaccionarAMaterial(unMaterial){
+		if(unMaterial.esUnSerVivo()){
+			self.cambioDeHumor(buenHumor)
+		}
+		if(unMaterial.esRadiactivo()){
+			self.cambioDeHumor(sobreexitado)
+		}
+	}
+	
+	override method darObjetosA(unCompanero){
+		super(unCompanero)
+		self.cambioDeHumor(malHumor)	
+	}
+		
+}
 
 

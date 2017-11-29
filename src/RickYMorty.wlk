@@ -1,4 +1,4 @@
-class Companero {
+class Companero {//borrar archivo
 	
 	var energia = 100
 	var mochila = #{}

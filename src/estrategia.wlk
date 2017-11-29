@@ -1,10 +1,3 @@
-import companero.*
-import summer.*
-import jerry.*
-import humor.*
-import rick.*
-import material.*
-import experimento.*
 
 class Estrategia {
 	

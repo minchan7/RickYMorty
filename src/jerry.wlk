@@ -1,10 +1,5 @@
-import companero.*
-import summer.*
+import companero.*//borrar archivo
 import humor.*
-import rick.*
-import material.*
-import experimento.*
-import estrategia.*
 
 object jerry inherits Companero {
 	

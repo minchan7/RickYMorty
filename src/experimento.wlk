@@ -1,14 +1,8 @@
-import companero.*
-import summer.*
-import jerry.*
-import humor.*
-import rick.*
-import material.*
-import estrategia.*
+import materialCreado.*
 
 class Experimento { // clase abstracta
 	
-	var componentes = #{}//modificar por correcciones variable
+	var componentes = #{}//modificar por correcciones (variable)
 	
 	method componentes() = componentes
 	
@@ -16,7 +10,7 @@ class Experimento { // clase abstracta
 	
 	method efectoDeCreacion(unPersonaje) {
 		self.materialesParaSerCreado(unPersonaje.materialesSegunExperimento(self),unPersonaje.estrategia())
-		unPersonaje.elementosDeLaMochila().removeAll(self.componentes())
+		unPersonaje.companero().elementosDeLaMochila().removeAll(self.componentes())
 	}
 		
 	method materialesParaSerCreado(materiales,estrategia)

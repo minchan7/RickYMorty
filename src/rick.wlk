@@ -1,8 +1,4 @@
 import companero.*
-import summer.*
-import jerry.*
-import humor.*
-import material.*
 import experimento.*
 import estrategia.*
 

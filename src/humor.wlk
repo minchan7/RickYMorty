@@ -1,10 +1,3 @@
-import companero.*
-import summer.*
-import jerry.*
-import rick.*
-import material.*
-import experimento.*
-import estrategia.*
 
 class Humor {//clase abstracta
 	

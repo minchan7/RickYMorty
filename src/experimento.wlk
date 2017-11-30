@@ -48,7 +48,7 @@ object construirBateria inherits CreacionDeMaterial {
 	
 	override method efectoDeCreacion(unPersonaje) {
 		super(unPersonaje)
-		unPersonaje.companero().disminuirEnergia(5)
+		unPersonaje.companero().modificarEnergia(-5)
 	}
 	
 	override method materialConstruido() = new Bateria(materiales)

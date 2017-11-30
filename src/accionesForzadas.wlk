@@ -41,7 +41,7 @@ class IncrementoDeEnergia inherits EfectoEnergia {
 	
 	override method ejecutar(unPersonaje) {
 		
-		unPersonaje.aumentarEnergia(self.porcentajeDeEnergia(unPersonaje))
+		unPersonaje.modificarEnergia(self.porcentajeDeEnergia(unPersonaje))
 	}
 }
 
@@ -49,7 +49,7 @@ class DecrementoDeEnergia inherits EfectoEnergia {
 	
 	override method ejecutar(unPersonaje) {
 		
-		unPersonaje.disminuirEnergia(self.porcentajeDeEnergia(unPersonaje))
+		unPersonaje.modificarEnergia( - self.porcentajeDeEnergia(unPersonaje))
 	}
 }
 

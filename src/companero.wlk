@@ -5,14 +5,10 @@ class Companero {
 	var energia = 100
 	var mochila = #{}
 	
-	method aumentarEnergia(unaCantidad) {
+		
+	method modificarEnergia(unaCantidad) {
 		
 		energia += unaCantidad
-	}
-	
-	method disminuirEnergia(unaCantidad) {
-		
-		energia -= unaCantidad
 	}
 	
 	method energiaInicial(_energia) {
@@ -27,7 +23,7 @@ class Companero {
 	
 	method tieneEspacioEnMochila() = mochila.size() < self.capacidadMaximaDeMochila()
 	
-	method tieneEnergiaNecesariaParaRecolectar(unMaterial) = self.energia() > self.energiaNecesariaParaRecolectar(unMaterial)
+	method tieneEnergiaNecesariaParaRecolectar(unMaterial) = self.energia() > unMaterial.energiaNecesariaParaSerRecolectado()
 	
 	method capacidadMaximaDeMochila() = 3
 	
@@ -36,8 +32,7 @@ class Companero {
 	method recolectar(unMaterial) {
 		self.verificarSiPuedeRecolectar(unMaterial) 
 		mochila.add(unMaterial)
-		self.disminuirEnergia(self.energiaNecesariaParaRecolectar(unMaterial))
-		unMaterial.aplicarEfecto(self)
+		unMaterial.efectoPorRecoleccion(self)
 	}
 	
 	method verificarSiPuedeRecolectar(unMaterial){//mensaje para especificar que error lanza
@@ -79,7 +74,7 @@ object summer inherits Companero {
 		if(self.energia() < 10) {
 			self.error("No tengo energia suficiente para darle mis materiales a mi companero")
 		}
-		self.disminuirEnergia(10)
+		self.modificarEnergia(-10)
 		super(unCompanero)	
 	}
 }

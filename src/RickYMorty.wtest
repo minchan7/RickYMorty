@@ -25,13 +25,13 @@ describe "materiales" {
 		
 	test "morty no puede recolectar material "{
 		
-		morty.aumentarEnergia(25)
+		morty.modificarEnergia(25)
 		assert.throwsExceptionWithMessage("No tengo energia suficiente para recolectar el material", {morty.recolectar(lata)})
 	}
 	
 	test "morty recolecta una lata "{
 		
-		morty.aumentarEnergia(350)		
+		morty.modificarEnergia(350)		
 		morty.recolectar(lata)
 		assert.that(morty.elementosDeLaMochila().contains(lata))
 		assert.equals(100+350-250, morty.energia())
@@ -39,7 +39,7 @@ describe "materiales" {
 	
 	test "Morty le da sus materiales al companero" {
 		//Chequeo energia
-		morty.aumentarEnergia(1000)
+		morty.modificarEnergia(1000)
 		morty.recolectar(lata)
 		morty.recolectar(cable)
 		morty.recolectar(materiaOscura)
@@ -66,7 +66,7 @@ describe "materiales" {
 		assert.that(rick.experimentosQuePuedeRealizar().contains(construirBateria))
 	}
 	
-	test "rick no puede construir experimento" {
+	test "rick no puede realizar un experimento" {
 		
 		rick.recibir(#{lata,fleeb})
 		assert.throwsExceptionWithMessage("No puedo realizar el experimento", {rick.realizar(construirShockElectrico)})
@@ -81,14 +81,15 @@ describe "materiales" {
 	test "radiactividad de cable, electricidad conducida de cable " {
 	
 		assert.notThat(cable.esRadiactivo())
-		assert.equals(3*40,cable.electricidadConducida())	
+		assert.equals(120,cable.electricidadConducida()) // 3 * 40 (seccion del cable) = 120 amperes
+		
 	}
 	
 	test "radiactividad de fleeb, cantidad de metal que consumio fleeb " {
 		
 		fleeb.comerMaterial(materiaOscura)
 		assert.that(fleeb.esRadiactivo())
-		assert.equals(250+20,fleeb.gramosMetal())
+		assert.equals(270,fleeb.gramosMetal()) // 250(metal de lata) +  20 gramos metal cable = 270 gramos totales del fleeb
 	}
 	
 	test "energia producida de materiaOscura, electricidad conducida de materiaOscura" {
@@ -142,7 +143,7 @@ describe "materiales" {
 	}
 	
 	test "summer no tiene energia necesaria para dar objetos a rick" {
-		summer.disminuirEnergia(95)
+		summer.modificarEnergia(-95)
 		assert.throwsExceptionWithMessage("No tengo energia suficiente para darle mis materiales a mi companero", {summer.darObjetosA(rick)})
 	}
 	
@@ -160,7 +161,7 @@ describe "materiales" {
 	
 	test "jerry se pone de mal humor " {
 		
-		jerry.aumentarEnergia(300)
+		jerry.modificarEnergia(300)
 		jerry.recolectar(cable)
 		jerry.darObjetosA(rick)
 		jerry.recolectar(lata)
@@ -170,7 +171,7 @@ describe "materiales" {
 	} 
 	
 	test "jerry sobreexitado "{
-		jerry.aumentarEnergia(1000)
+		jerry.modificarEnergia(1000)
 		jerry.recolectar(fleeb)
 		assert.equals(sobreexitado,jerry.humor())
 		
@@ -192,6 +193,8 @@ describe "materiales" {
 		summer.recolectar(otraMateriaOscura)
 		assert.equals(350,morty.energia())
 		assert.equals(400,summer.energia())
+		//Morty // energia inicial = 600 - 250 gramos metal de lata = 350
+		//Summer
 	
 	}
 	
@@ -218,7 +221,7 @@ describe "materiales" {
 	test"recoleccion de una parasito con acciones forzadas sobre la energia" {
 		
 		
-		morty.aumentarEnergia(400)
+		morty.modificarEnergia(400)
 		morty.recolectar(parasito)
 		
 		assert.equals(1000-500-10,morty.energia())		
@@ -226,7 +229,7 @@ describe "materiales" {
 	
 	test "recoleccion de una parasito con acciones forzadas sobre recoger un elemento oculto" {
 		
-		morty.aumentarEnergia(400)
+		morty.modificarEnergia(400)
 		morty.recolectar(parasito2)
 		assert.that(morty.elementosDeLaMochila().contains(cable))
 		assert.that(morty.elementosDeLaMochila().contains(parasito2))
@@ -234,7 +237,7 @@ describe "materiales" {
 	
 	test "recoleccion de una parasito con acciones forzadas sobre descartar un objeto"{
 		
-		morty.aumentarEnergia(400)
+		morty.modificarEnergia(400)
 		morty.recolectar(lata)
 		morty.recolectar(cable)
 		morty.recolectar(parasito3)
@@ -243,7 +246,7 @@ describe "materiales" {
 	
 	test "recoleccion de una parasito con acciones forzadas a entregar sus materiales a un compañero"{
 		
-		morty.aumentarEnergia(400)
+		morty.modificarEnergia(400)
 		morty.recolectar(lata)
 		morty.recolectar(cable)
 		morty.recolectar(parasito4)

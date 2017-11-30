@@ -14,7 +14,10 @@ class Material {  // clase abstracta
 	
 	method energiaNecesariaParaSerRecolectado() = self.gramosMetal()
 	
-	method aplicarEfecto(unPersonaje){}
+	method efectoPorRecoleccion(unPersonaje){
+		
+		unPersonaje.modificarEnergia(- unPersonaje.energiaNecesariaParaRecolectar(self))
+	}
 	
 }
 
@@ -82,13 +85,14 @@ class Fleeb inherits Material {
 	
 	method materialQueMenosElectricidadConduzca() = materialesConsumidos.min({material => material.electricidadConducida()})
 
-	override method energiaNecesariaParaSerRecolectado() = super()*2
+	override method energiaNecesariaParaSerRecolectado() =  super()*2
 	
 	override method esUnSerVivo() = true
 	
-	override method aplicarEfecto(unPersonaje){
+	override method efectoPorRecoleccion(unPersonaje){
+		super(unPersonaje)
 		if(!self.esRadiactivo()){
-			unPersonaje.aumentarEnergia(10)
+			unPersonaje.modificarEnergia(10)
 		}
 	}
 	
@@ -126,8 +130,8 @@ class ParasitoAlienigena inherits Material {
 	
 	override method energiaProducida() = 5
 	
-	override method aplicarEfecto(unPersonaje) {//Modificar por correccion
-		
+	override method efectoPorRecoleccion(unPersonaje) {//Modificar por correccion
+		super(unPersonaje)
 		accionesForzadas.forEach({accion => accion.ejecutar(unPersonaje)})
 	}
 	

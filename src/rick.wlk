@@ -54,8 +54,9 @@ object rick{
 	
 	method efectoDeRealizarExperimento(unExperimento) {
 		unExperimento.efectoDeCreacion(self)
-		mochila.removeAll(self.materialesSegunExperimento(unExperimento))
 		self.agregarMaterial(self.materialConstruidoSegunExperimento(unExperimento))
+		mochila.removeAll(self.materialesSegunExperimento(unExperimento))
+		
 	}
 	
 	

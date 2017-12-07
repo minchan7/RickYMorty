@@ -23,8 +23,8 @@ object construirBateria inherits Experimento {
 	
 	override method materialesUsadosParaCreacion(unosMateriales,estrategia){
 	
-		return estrategia.seleccionarMaterial(self.primerRequisitoParaCreacion(unosMateriales)) +
-			   estrategia.seleccionarMaterial(self.segundoRequisitoParaCreacion(unosMateriales))           
+		return #{estrategia.seleccionarMaterial(self.primerRequisitoParaCreacion(unosMateriales))} +
+			  #{ estrategia.seleccionarMaterial(self.segundoRequisitoParaCreacion(unosMateriales))}        
  		              
 	}
 	
@@ -59,7 +59,7 @@ object construirCircuito inherits Experimento{
 	}
 	
 	override method materialesUsadosParaCreacion(unosMateriales, estrategia) {
-		return unosMateriales.filter({material => material.electricidadConducida() >= 5})
+		return #{estrategia.seleccionarMaterial(unosMateriales.filter({material => material.electricidadConducida() >= 5}))}
 		
 	}
 

@@ -115,21 +115,21 @@ describe "materiales" {
 	test "requerimiento para construir una bateria " {
 		
 		rick.recibir(#{lata,fleeb})
-		assert.that(construirBateria.requerimientoParaSerCreado(rick.mochila()))
+		assert.that(construirBateria.cumpleRequisitoParaSerCreado(rick.mochila()))
 		
 	}
 	
 	test "requerimiento para construir un circuito" {
 		
 		rick.recibir(#{lata,cable})
-		assert.that(construirCircuito.requerimientoParaSerCreado(rick.mochila()))
+		assert.that(construirCircuito.cumpleRequisitoParaSerCreado(rick.mochila()))
 		
 	}
 	
 	test "requerimiento para construir un shock electrico " {
 		
 		rick.recibir(#{lata,fleeb,cable})
-		assert.notThat(construirShockElectrico.requerimientoParaSerCreado(rick.mochila()))
+		assert.notThat(construirShockElectrico.cumpleRequisitoParaSerCreado(rick.mochila()))
 			
 	}
 	
@@ -260,7 +260,7 @@ describe "materiales" {
 		rick.recibir(#{lata,fleeb,cable})
 		rick.realizar(construirBateria)
 		assert.equals(rick.companero().energia(),100-5)
-		assert.that(construirBateria.requerimientoParaSerCreado(rick.mochila()))
+		assert.that(construirBateria.cumpleRequisitoParaSerCreado(rick.mochila()))
 			
 	}
 	
@@ -269,7 +269,7 @@ describe "materiales" {
 		rick.recibir(#{lata,fleeb,cable, materiaOscura})
 		rick.cambiarEstrategia(ecologico)
 		rick.realizar(construirCircuito)
-		assert.that(construirCircuito.requerimientoParaSerCreado(rick.mochila()))
+		assert.that(construirCircuito.cumpleRequisitoParaSerCreado(rick.mochila()))
 			
 	}
 	
@@ -278,7 +278,7 @@ describe "materiales" {
 		rick.recibir(#{lata,fleeb,cable, materiaOscura})
 		rick.cambiarEstrategia(menorCantidadDeMetal)
 		rick.realizar(construirCircuito)
-		assert.that(construirCircuito.requerimientoParaSerCreado(rick.mochila()))
+		assert.that(construirCircuito.cumpleRequisitoParaSerCreado(rick.mochila()))
 			
 	}
 	
@@ -288,7 +288,7 @@ describe "materiales" {
 		rick.cambiarEstrategia(mejorGeneradorElectrico)
 		rick.realizar(construirBateria)
 		assert.equals(rick.companero().energia(),100-5)
-		assert.that(construirBateria.requerimientoParaSerCreado(rick.mochila()))
+		assert.that(construirBateria.cumpleRequisitoParaSerCreado(rick.mochila()))
 			
 	}
 	

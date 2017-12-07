@@ -17,15 +17,14 @@ object rick{
 		mochila.add(unMaterial)
 	}
 	
-	method experimentosQuePuedeRealizar() = experimentos.filter({experimento => experimento.requerimientoParaSerCreado(self.mochila())})
+	method experimentosQuePuedeRealizar() = experimentos.filter({experimento => experimento.cumpleRequisitoParaSerCreado(mochila)})
 	
 	
-	method realizar(unExperimento){
-		// TODO Acá está chequeando todos los experimentos innecesariamente.		
-		if(!self.experimentosQuePuedeRealizar().contains(unExperimento)){
+	method realizar(unExperimento){	
+		if(!unExperimento.cumpleRequisitoParaSerCreado(mochila)){
 			self.error("No puedo realizar el experimento")
 		}
-		unExperimento.efectoDeCreacion(self)
+		self.efectoDeRealizarExperimento(unExperimento)
 	}
 	
 	method cambiarCompanero(unCompanero){
@@ -48,7 +47,18 @@ object rick{
 
 	// TODO Este código es muy difícil de leer, parece inconsistente, a la izquierda "materiales" parece que va a devolver una lista
 	// a la derecha "cumpleCon..." parece que va a devolver un booleano.
-	method materialesSegunExperimento(experimento) = experimento.cumpleConRequisitos(self.mochila())
+	
+	method materialesSegunExperimento(experimento) = experimento.materialesUsadosParaCreacion(mochila,estrategia)
+	
+	method materialConstruidoSegunExperimento(experimento) = experimento.materialConstruido(mochila,estrategia)
+	
+	method efectoDeRealizarExperimento(unExperimento) {
+		unExperimento.efectoDeCreacion(self)
+		mochila.removeAll(self.materialesSegunExperimento(unExperimento))
+		self.agregarMaterial(self.materialConstruidoSegunExperimento(unExperimento))
+	}
+	
+	
 	
 }	
 	

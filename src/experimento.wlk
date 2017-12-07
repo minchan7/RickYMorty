@@ -1,74 +1,47 @@
 import materialCreado.*
 
 class Experimento { // clase abstracta
-	
-	var materiales = #{}
-	
-	method requerimientoParaSerCreado(unosMateriales)
-	
-	method efectoDeCreacion(unPersonaje) {
-		// TODO este código es confuso y desprolijo.
-		// Está enviando un mensaje al personaje sólo para que él lo vuelva a enviar al experimento,
-		// agrega complejidad innecesaria.
-		self.materialesParaSerCreado(unPersonaje.materialesSegunExperimento(self),unPersonaje.estrategia())
-		unPersonaje.mochila().removeAll(materiales)
-	}
 		
-	method materialesParaSerCreado(unosMateriales,estrategia)
+		
+	method efectoDeCreacion(unPersonaje) {}
+		
+	method materialesUsadosParaCreacion(unosMateriales,estrategia)
 	
-	method cumpleConRequisitos(unosMateriales)
+	method cumpleRequisitoParaSerCreado(unosMateriales)
 	
 }
 
 
-
-class CreacionDeMaterial inherits Experimento { // clase abstracta
+object construirBateria inherits Experimento {
 	
 	
-	override method efectoDeCreacion(unPersonaje){
-		super(unPersonaje)
-		unPersonaje.agregarMaterial(self.materialConstruido())
-		
+	 override method cumpleRequisitoParaSerCreado(unosMateriales){
+		return  unosMateriales.any({elemento => elemento.gramosMetal()>= 200}) 
+				and unosMateriales.any({elemento => elemento.esRadiactivo()})
 	}
 	
-	method materialConstruido()
-}
-
-object construirBateria inherits CreacionDeMaterial {
 	
+	override method materialesUsadosParaCreacion(unosMateriales,estrategia){
 	
-	 override method requerimientoParaSerCreado(unosMateriales){
-		return  unosMateriales.any({material => material.gramosMetal() >= 200}) 
-				and unosMateriales.any({material => material.esRadiactivo()})
-	}
-	
-	// TODO ¿Cuál es la relación entre este método y "cumpleConRequisitos", no hacen lo mismo?
-	override method materialesParaSerCreado(unosMateriales,estrategia){
-	
-		materiales = #{(estrategia.seleccionarMaterial(self.primerRequisito(unosMateriales))),
-			(estrategia.seleccionarMaterial(self.segundoRequisito(unosMateriales)))}               
+		return estrategia.seleccionarMaterial(self.primerRequisitoParaCreacion(unosMateriales)) +
+			   estrategia.seleccionarMaterial(self.segundoRequisitoParaCreacion(unosMateriales))           
  		              
 	}
 	
 	override method efectoDeCreacion(unPersonaje) {
-		super(unPersonaje)
 		unPersonaje.companero().modificarEnergia(-5)
 	}
 	
-	override method materialConstruido() = new Bateria(materiales)
+	method materialConstruido(unosMateriales,estrategia) = new Bateria(self.materialesUsadosParaCreacion(unosMateriales,estrategia))
 	
-	override method cumpleConRequisitos(unosMateriales){
-		
-		return self.primerRequisito(unosMateriales) + self.segundoRequisito(unosMateriales)
-	}
 
-	// TODO Usen nombres más representativos.	
-	method primerRequisito(unosMateriales){
+
+	method primerRequisitoParaCreacion(unosMateriales){
 		
 		return unosMateriales.filter({elemento => elemento.gramosMetal()>= 200})
 	}
 	
-		method segundoRequisito(unosMateriales){
+		method segundoRequisitoParaCreacion(unosMateriales){
 		
 		return unosMateriales.filter({elemento => elemento.esRadiactivo()})
 	}
@@ -78,23 +51,20 @@ object construirBateria inherits CreacionDeMaterial {
 
 
 
-object construirCircuito inherits CreacionDeMaterial{
+object construirCircuito inherits Experimento{
 	
 	
-	override method requerimientoParaSerCreado(unosMateriales) {
+	override method cumpleRequisitoParaSerCreado(unosMateriales) {
 		return unosMateriales.any({material => material.electricidadConducida() >= 5})
 	}
 	
-	override method materialesParaSerCreado(unosMateriales, estrategia) {
-		materiales = self.cumpleConRequisitos(unosMateriales)
+	override method materialesUsadosParaCreacion(unosMateriales, estrategia) {
+		return unosMateriales.filter({material => material.electricidadConducida() >= 5})
 		
 	}
 
-	override method materialConstruido() = new Circuito(materiales)
+	method materialConstruido(unosMateriales, estrategia) = new Circuito(self.materialesUsadosParaCreacion(unosMateriales, estrategia))
 	
-	override method cumpleConRequisitos(unosMateriales){
-		return unosMateriales.filter({material => material.electricidadConducida() >= 5})
-	}
 
 }
 
@@ -103,37 +73,31 @@ object construirShockElectrico inherits Experimento {
 	var generador
 	var conductor
 
-	override method requerimientoParaSerCreado(unosMateriales) {
+	override method cumpleRequisitoParaSerCreado(unosMateriales) {
 		return unosMateriales.any({ material => material.energiaProducida() > 0 }) 
 			and unosMateriales.any({ material => material.electricidadConducida() > 0 })
 	}
 	
-	override method materialesParaSerCreado(unosMateriales, estrategia){
-		generador = estrategia.seleccionarMaterial(self.requisitoGenerador(unosMateriales))
- 	 	conductor = estrategia.seleccionarMaterial(self.requisitoConductor(unosMateriales))
- 	 	materiales = #{generador,conductor}	
+	override method materialesUsadosParaCreacion(unosMateriales, estrategia){
+		generador = estrategia.seleccionarMaterial(self.materialesRequeridosPorGenerador(unosMateriales))
+ 	 	conductor = estrategia.seleccionarMaterial(self.materialesRequeridosPorGenerador(unosMateriales))
+ 	 	return #{generador,conductor}	
 	}
 	
 	override method efectoDeCreacion(unPersonaje) {
-		super(unPersonaje)
 		unPersonaje.companero().aumentarEnergia(generador.energiaProducida() * conductor.electricidadConducida())
 	}
 	
-	method requisitoGenerador(unosMateriales){
+	method materialesRequeridosPorGenerador(unosMateriales){
 		
 		return unosMateriales.filter({material => material.energiaProducida() > 0})
 	}
 	
-		method requisitoConductor(unosMateriales){
+		method materialesRequeridosPorConductor(unosMateriales){
 		
 		return unosMateriales.filter({material => material.electricidadConducida() > 0})
 	}
 	
-	override method cumpleConRequisitos(unosMateriales){
-		
-		return self.requisitoGenerador(unosMateriales) + self.requisitoConductor(unosMateriales)
 	
-	}
-	
-	}
+}
 

@@ -21,7 +21,7 @@ object rick{
 	
 	
 	method realizar(unExperimento){
-		
+		// TODO Acá está chequeando todos los experimentos innecesariamente.		
 		if(!self.experimentosQuePuedeRealizar().contains(unExperimento)){
 			self.error("No puedo realizar el experimento")
 		}
@@ -46,6 +46,8 @@ object rick{
 	
 	method estrategia() = estrategia
 
+	// TODO Este código es muy difícil de leer, parece inconsistente, a la izquierda "materiales" parece que va a devolver una lista
+	// a la derecha "cumpleCon..." parece que va a devolver un booleano.
 	method materialesSegunExperimento(experimento) = experimento.cumpleConRequisitos(self.mochila())
 	
 }	

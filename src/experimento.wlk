@@ -7,6 +7,9 @@ class Experimento { // clase abstracta
 	method requerimientoParaSerCreado(unosMateriales)
 	
 	method efectoDeCreacion(unPersonaje) {
+		// TODO este código es confuso y desprolijo.
+		// Está enviando un mensaje al personaje sólo para que él lo vuelva a enviar al experimento,
+		// agrega complejidad innecesaria.
 		self.materialesParaSerCreado(unPersonaje.materialesSegunExperimento(self),unPersonaje.estrategia())
 		unPersonaje.mochila().removeAll(materiales)
 	}
@@ -39,6 +42,7 @@ object construirBateria inherits CreacionDeMaterial {
 				and unosMateriales.any({material => material.esRadiactivo()})
 	}
 	
+	// TODO ¿Cuál es la relación entre este método y "cumpleConRequisitos", no hacen lo mismo?
 	override method materialesParaSerCreado(unosMateriales,estrategia){
 	
 		materiales = #{(estrategia.seleccionarMaterial(self.primerRequisito(unosMateriales))),
@@ -57,7 +61,8 @@ object construirBateria inherits CreacionDeMaterial {
 		
 		return self.primerRequisito(unosMateriales) + self.segundoRequisito(unosMateriales)
 	}
-	
+
+	// TODO Usen nombres más representativos.	
 	method primerRequisito(unosMateriales){
 		
 		return unosMateriales.filter({elemento => elemento.gramosMetal()>= 200})

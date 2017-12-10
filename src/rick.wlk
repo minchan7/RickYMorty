@@ -1,13 +1,16 @@
 import companero.*
 import experimento.*
 import estrategia.*
+import wollok.game.*
 
 object rick{
 	
 	var mochila = #{}
-	var experimentos = #{construirBateria,construirCircuito,construirShockElectrico}
+	var experimentos =[construirBateria,construirCircuito,construirShockElectrico]
 	var companero = morty
-	var estrategia = alAzar
+	var estrategia = alAzar	
+	
+	method imagen() = "rick.jpeg"
 	
 	method recibir(unosMateriales){
 		mochila.addAll(unosMateriales)
@@ -24,7 +27,7 @@ object rick{
 		if(!unExperimento.cumpleRequisitoParaSerCreado(mochila)){
 			self.error("No puedo realizar el experimento")
 		}
-		self.efectoDeRealizarExperimento(unExperimento)
+		else self.efectoDeRealizarExperimento(unExperimento)
 	}
 	
 	method cambiarCompanero(unCompanero){
@@ -44,9 +47,6 @@ object rick{
 	}
 	
 	method estrategia() = estrategia
-
-	// TODO Este código es muy difícil de leer, parece inconsistente, a la izquierda "materiales" parece que va a devolver una lista
-	// a la derecha "cumpleCon..." parece que va a devolver un booleano.
 	
 	method materialesSegunExperimento(experimento) = experimento.materialesUsadosParaCreacion(mochila,estrategia)
 	
@@ -58,8 +58,6 @@ object rick{
 		mochila.removeAll(self.materialesSegunExperimento(unExperimento))
 		
 	}
-	
-	
 	
 }	
 	

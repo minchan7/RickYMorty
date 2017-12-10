@@ -2,6 +2,7 @@ import accionesForzadas.*
 
 class Material {  // clase abstracta
 	
+	
 	method gramosMetal() 
 	
 	method energiaProducida() = 0
@@ -18,7 +19,6 @@ class Material {  // clase abstracta
 		
 		unPersonaje.modificarEnergia(- unPersonaje.energiaNecesariaParaRecolectar(self))
 	}
-	
 }
 
 class Lata inherits Material {	
@@ -102,7 +102,7 @@ class MateriaOscura inherits Material {
 	
 	const materialBase
 	
-	constructor(_materialBase) {
+	constructor(_materialBase){
 		
 		materialBase = _materialBase
 	}

@@ -1,10 +1,16 @@
 import humor.*
+import wollok.game.*
 
 class Companero {
 	
 	var energia = 100
 	var mochila = #{}
+	var posicion = new Position(5,5)
 	
+	method getPosicion() = posicion
+	method setPosicion(_posicion) { posicion = _posicion }
+	
+	method imagen() 
 		
 	method modificarEnergia(unaCantidad) {
 		
@@ -30,9 +36,14 @@ class Companero {
 	method energiaNecesariaParaRecolectar(unMaterial) = unMaterial.energiaNecesariaParaSerRecolectado()
 	
 	method recolectar(unMaterial) {
-		self.verificarSiPuedeRecolectar(unMaterial) 
-		mochila.add(unMaterial)
-		unMaterial.efectoPorRecoleccion(self)
+		if(!self.tieneEspacioEnMochila() || !self.tieneEnergiaNecesariaParaRecolectar(unMaterial)){
+			self.verificarSiPuedeRecolectar(unMaterial)}
+			 
+		else {
+			mochila.add(unMaterial)
+			unMaterial.efectoPorRecoleccion(self)}
+			
+			
 	}
 	
 	method verificarSiPuedeRecolectar(unMaterial){//mensaje para especificar que error lanza
@@ -61,10 +72,14 @@ class Companero {
 	
 } 
 
-object morty inherits Companero {}
+object morty inherits Companero {
+	override method imagen() = "morty.jpeg"
+}
 
 
 object summer inherits Companero {
+	
+	override method imagen() = "summer.jpeg"
 	
 	override method capacidadMaximaDeMochila() = 2
 	
@@ -74,7 +89,7 @@ object summer inherits Companero {
 		if(self.energia() < 10) {
 			self.error("No tengo energia suficiente para darle mis materiales a mi companero")
 		}
-		self.modificarEnergia(-10)
+		else self.modificarEnergia(-10)
 		super(unCompanero)	
 	}
 }
@@ -82,6 +97,8 @@ object summer inherits Companero {
 object jerry inherits Companero {
 	
 	var humor = buenHumor
+	
+	override method imagen() = "jerry.jpeg"
 	
 	method humor() = humor
 	

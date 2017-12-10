@@ -1,0 +1,6 @@
+import nivel.*
+
+program RickYMorty {
+	nivel.configurate(15,15)
+	game.start()
+}

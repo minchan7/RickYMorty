@@ -1,6 +1,7 @@
 import materialCreado.*
 
 class Experimento { // clase abstracta
+	
 		
 		
 	method efectoDeCreacion(unPersonaje) {}
@@ -14,7 +15,8 @@ class Experimento { // clase abstracta
 
 object construirBateria inherits Experimento {
 	
-	
+	var press = 1
+		
 	 override method cumpleRequisitoParaSerCreado(unosMateriales){
 		return  unosMateriales.any({elemento => elemento.gramosMetal()>= 200}) 
 				and unosMateriales.any({elemento => elemento.esRadiactivo()})
@@ -30,6 +32,7 @@ object construirBateria inherits Experimento {
 	
 	override method efectoDeCreacion(unPersonaje) {
 		unPersonaje.companero().modificarEnergia(-5)
+		
 	}
 	
 	method materialConstruido(unosMateriales,estrategia) = new Bateria(self.materialesUsadosParaCreacion(unosMateriales,estrategia))
@@ -41,7 +44,7 @@ object construirBateria inherits Experimento {
 		return unosMateriales.filter({elemento => elemento.gramosMetal()>= 200})
 	}
 	
-		method segundoRequisitoParaCreacion(unosMateriales){
+	method segundoRequisitoParaCreacion(unosMateriales){
 		
 		return unosMateriales.filter({elemento => elemento.esRadiactivo()})
 	}
@@ -53,6 +56,7 @@ object construirBateria inherits Experimento {
 
 object construirCircuito inherits Experimento{
 	
+	var press = 2
 	
 	override method cumpleRequisitoParaSerCreado(unosMateriales) {
 		return unosMateriales.any({material => material.electricidadConducida() >= 5})
@@ -63,13 +67,14 @@ object construirCircuito inherits Experimento{
 		
 	}
 
-	method materialConstruido(unosMateriales, estrategia) = new Circuito(self.materialesUsadosParaCreacion(unosMateriales, estrategia))
+	method materialConstruido(unosMateriales,estrategia) = new Circuito(self.materialesUsadosParaCreacion(unosMateriales, estrategia))
 	
-
+	
 }
 
 object construirShockElectrico inherits Experimento {
 	
+	var press = 3
 	var generador
 	var conductor
 

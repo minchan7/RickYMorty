@@ -161,7 +161,7 @@ describe "materiales" {
 	
 	test "jerry se pone de mal humor " {
 		
-		jerry.modificarEnergia(300)
+		jerry.modificarEnergia(1000)
 		jerry.recolectar(cable)
 		jerry.darObjetosA(rick)
 		jerry.recolectar(lata)

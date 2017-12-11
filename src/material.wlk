@@ -2,6 +2,7 @@ import accionesForzadas.*
 
 class Material {  // clase abstracta
 	
+	var posicion = new Position(1.randomUpTo(game.height()-1),1.randomUpTo(game.width()-1))
 	
 	method gramosMetal() 
 	
@@ -19,6 +20,10 @@ class Material {  // clase abstracta
 		
 		unPersonaje.modificarEnergia(- unPersonaje.energiaNecesariaParaRecolectar(self))
 	}
+	
+	 method posicion() = posicion
+	 
+	 method cambiarPosicion(_posicion){posicion = _posicion}
 }
 
 class Lata inherits Material {	
@@ -35,6 +40,7 @@ class Lata inherits Material {
 	
 	override method electricidadConducida() = 0.1 * gramosMetal
 		
+	override method toString() = "una lata"
 }
 
 class Cable inherits Material {

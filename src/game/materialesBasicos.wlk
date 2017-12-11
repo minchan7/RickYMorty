@@ -1,9 +1,17 @@
 import material.*
 import accionesForzadas.*
+import nivel.*
 
 object lata inherits Lata(5) {
 	 
 	 method imagen() = "lata.png"
+	 
+}
+
+object testobj inherits Lata(5) {
+	 
+	 method imagen() = "lata.png"
+	 method position() = new Position(3, 3)
 }
 
 object cable inherits Cable(50,50){
@@ -38,6 +46,5 @@ object fueRecolectado inherits Material{
 	method imagen() = "suelo.jpg"
 	
 	override method efectoPorRecoleccion(unPersonaje){}
-	
 	
 }

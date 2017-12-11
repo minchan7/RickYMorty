@@ -18,17 +18,25 @@ object nivel {
 	//	VISUALES
 	 	const materialesBasicos = [lata,fleeb,cable,materiaOscura,parasitoAlienigena]//ConjuntoDeMaterialesBasicos
 	 	
-	 	materialesBasicos.forEach{materiales => self.random(_largo-2,_ancho-2).drawElement(materiales)} 
+	 	materialesBasicos.forEach{materiales => game.addVisual(materiales)}
+
 	 	new Position(1,1).drawElement(rick)
 		game.addVisualCharacter(morty)
 	
 	// ACCIONES
 		
-		materialesBasicos.forEach({material => game.whenCollideDo(material,{personaje =>
-												if(rick.companero() == personaje) personaje.recolectar(material)})})	
+		R.onPressDo { 
+			materialesBasicos.forEach { material => 
+				if(rick.companero().getPosicion() == material.posicion()) {
+					rick.companero().recolectar(material)
+					game.removeVisual(material)
+				}
+			} 
+		}	
 		
-		game.whenCollideDo(rick, { companero => if(rick.companero() == companero ) companero.darObjetosA(rick) })
-		E.onPressDo{game.say(rick, "" + rick.experimentosQuePuedeRealizar()) }
+		D.onPressDo{if(rick.companero().getPosicion() == new Position(1,1) ) rick.companero().darObjetosA(rick) }
+		E.onPressDo{game.say(rick, "" + rick.experimentosQuePuedeRealizar())
+					game.removeVisual(lata)}
 		M.onPressDo{game.say(rick,"" + rick.mochila())
 					game.say(morty,"" + morty.elementosDeLaMochila())}
 		
@@ -47,9 +55,6 @@ object nivel {
 		(0 .. largo).forEach { n => new ParedDerecha(new Position(ancho, n)) } // BordeDer
 	}
 	
-	/*method experimentosARealizar(unNumero){
-		rick.realizar(rick.experimentosQuePuedeRealizar().get(unNumero))
-	}*/
 	
 	method random(largo,ancho) = new Position(1.randomUpTo(largo),1.randomUpTo(ancho)) 
 

@@ -2,7 +2,7 @@ import accionesForzadas.*
 
 class Material {  // clase abstracta
 	
-	var posicion = new Position(1.randomUpTo(game.height()-1),1.randomUpTo(game.width()-1))
+	var posicion = new Position(2.randomUpTo(game.height()-2),2.randomUpTo(game.width()-3))
 	
 	method gramosMetal() 
 	

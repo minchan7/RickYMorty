@@ -1,14 +1,18 @@
+import contenedor.*
 import humor.*
 import wollok.game.*
+
 
 class Companero {
 	
 	var energia = 100
-	var mochila = #{}
+	var mochila = []
 	var posicion = new Position(5,5)
+	var contenedorVisuales = new MochilaCompanero()
 	
-	method getPosicion() = posicion
-	method setPosicion(_posicion) { posicion = _posicion }
+	method posicion() = posicion
+	 
+	method cambiarPosicion(_posicion){posicion = _posicion}
 	
 	method imagen() 
 		
@@ -37,11 +41,14 @@ class Companero {
 	
 	method recolectar(unMaterial) {
 		if(!self.tieneEspacioEnMochila() || !self.tieneEnergiaNecesariaParaRecolectar(unMaterial)){
-			self.verificarSiPuedeRecolectar(unMaterial)}
+			self.verificarSiPuedeRecolectar(unMaterial)
+		}
 			 
 		else {
 			mochila.add(unMaterial)
-			unMaterial.efectoPorRecoleccion(self)}
+			unMaterial.efectoPorRecoleccion(self)
+			contenedorVisuales.guardar(unMaterial)
+		}
 			
 			
 	}
@@ -65,6 +72,8 @@ class Companero {
 	
 	method darObjetosA(unCompanero){
 		unCompanero.recibir(mochila)
+		mochila.forEach{material => contenedorVisuales.sacar(material)}
+		contenedorVisuales.restablecerPosicion()
 		mochila.clear()
 	}
 	

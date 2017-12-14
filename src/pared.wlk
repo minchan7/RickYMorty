@@ -17,7 +17,7 @@ class ParedArriba inherits Pared {
 	constructor(_posicion) = super(_posicion)
 	
 	override method empuja(personaje) {
-		personaje.getPosicion().moveDown(1)
+		personaje.posicion().moveDown(1)
 	}
 }
 
@@ -25,7 +25,7 @@ class ParedAbajo inherits Pared {
 	constructor(_posicion) = super(_posicion)
 	
 	override method empuja(personaje) {
-		personaje.getPosicion().moveUp(1)
+		personaje.posicion().moveUp(1)
 	}
 }
 
@@ -33,7 +33,7 @@ class ParedIzquierda inherits Pared {
 	constructor(_posicion) = super(_posicion)
 	
 	override method empuja(personaje) {
-		personaje.getPosicion().moveRight(1)
+		personaje.posicion().moveRight(1)
 	}
 }
 
@@ -41,6 +41,6 @@ class ParedDerecha inherits Pared {
 	constructor(_posicion) = super(_posicion)
 	
 	override method empuja(personaje) {
-		personaje.getPosicion().moveLeft(1)
+		personaje.posicion().moveLeft(1)
 	}
 }

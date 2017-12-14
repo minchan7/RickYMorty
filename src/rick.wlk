@@ -2,18 +2,27 @@ import companero.*
 import experimento.*
 import estrategia.*
 import wollok.game.*
+import contenedor.*
 
 object rick{
 	
-	var mochila = #{}
+	var mochila = []
 	var experimentos =[construirBateria,construirCircuito,construirShockElectrico]
 	var companero = morty
 	var estrategia = alAzar	
+	
+	var posicion = new Position(2,2)
+	var experimentosVisuales = experimentos.forEach{experimento => experimentosRick.guardar(experimento)}
+	
+	method posicion() = posicion
+	 
+	method cambiarPosicion(_posicion){posicion = _posicion}
 	
 	method imagen() = "rick.jpeg"
 	
 	method recibir(unosMateriales){
 		mochila.addAll(unosMateriales)
+		unosMateriales.forEach{material => mochilaRick.guardar(material)}
 	}
 	
 	method agregarMaterial(unMaterial){
@@ -53,9 +62,11 @@ object rick{
 	method materialConstruidoSegunExperimento(experimento) = experimento.materialConstruido(mochila,estrategia)
 	
 	method efectoDeRealizarExperimento(unExperimento) {
-		unExperimento.efectoDeCreacion(self)
-		self.agregarMaterial(self.materialConstruidoSegunExperimento(unExperimento))
-		mochila.removeAll(self.materialesSegunExperimento(unExperimento))
+		var materiales = self.materialesSegunExperimento(unExperimento) 
+		
+		unExperimento.efectoDeCreacion(self,materiales)
+		self.materialesSegunExperimento(unExperimento).forEach{material => mochilaRick.sacar(material)}
+		mochila.removeAll(materiales)
 		
 	}
 	

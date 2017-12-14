@@ -2,14 +2,19 @@ import materialCreado.*
 
 class Experimento { // clase abstracta
 	
+	var posicion = new Position(1,0)
 		
-		
-	method efectoDeCreacion(unPersonaje) {}
+	method efectoDeCreacion(unPersonaje,unosMateriales) {}
 		
 	method materialesUsadosParaCreacion(unosMateriales,estrategia)
 	
 	method cumpleRequisitoParaSerCreado(unosMateriales)
 	
+	method posicion() = posicion
+	 
+	method cambiarPosicion(_posicion){posicion = _posicion}
+	
+	method imagen()
 }
 
 
@@ -30,12 +35,13 @@ object construirBateria inherits Experimento {
  		              
 	}
 	
-	override method efectoDeCreacion(unPersonaje) {
+	override method efectoDeCreacion(unPersonaje,unosMateriales) {
+		unPersonaje.agregarMaterial(self.materialConstruido(unosMateriales))
 		unPersonaje.companero().modificarEnergia(-5)
 		
 	}
 	
-	method materialConstruido(unosMateriales,estrategia) = new Bateria(self.materialesUsadosParaCreacion(unosMateriales,estrategia))
+	method materialConstruido(unosMateriales) = new Bateria(unosMateriales)
 	
 
 
@@ -49,6 +55,7 @@ object construirBateria inherits Experimento {
 		return unosMateriales.filter({elemento => elemento.esRadiactivo()})
 	}
 	
+	override method imagen() ="bateria.png"
 	
 }
 
@@ -67,9 +74,13 @@ object construirCircuito inherits Experimento{
 		
 	}
 
-	method materialConstruido(unosMateriales,estrategia) = new Circuito(self.materialesUsadosParaCreacion(unosMateriales, estrategia))
+	method materialConstruido(unosMateriales) = new Circuito(unosMateriales)
 	
+	override method efectoDeCreacion(unPersonaje,unosMateriales) {
+		unPersonaje.agregarMaterial(self.materialConstruido(unosMateriales))
+	}
 	
+	override method imagen() ="circuito.png"
 }
 
 object construirShockElectrico inherits Experimento {
@@ -89,8 +100,8 @@ object construirShockElectrico inherits Experimento {
  	 	return #{generador,conductor}	
 	}
 	
-	override method efectoDeCreacion(unPersonaje) {
-		unPersonaje.companero().aumentarEnergia(generador.energiaProducida() * conductor.electricidadConducida())
+	override method efectoDeCreacion(unPersonaje,unosMateriales) {
+		unPersonaje.companero().modificarEnergia(generador.energiaProducida() * conductor.electricidadConducida())
 	}
 	
 	method materialesRequeridosPorGenerador(unosMateriales){
@@ -103,6 +114,7 @@ object construirShockElectrico inherits Experimento {
 		return unosMateriales.filter({material => material.electricidadConducida() > 0})
 	}
 	
+	override method imagen() = "shockElectrico.png"
 	
 }
 

@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: TpRickYMorty
 Bundle-Vendor: My Company
 Bundle-Version: 1.0.0.qualifier
-Bundle-SymbolicName: TpRickYMorty; singleton:=true
+Bundle-SymbolicName: JuegoRickYMorty;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: com.ibm.icu,
  org.eclipse.xtext,

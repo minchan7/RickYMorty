@@ -27,6 +27,8 @@ object nivel {
 	
 	// ACCIONES
 		
+		//Al presionar la tecla R, el compañero de Rick recoge todos los materiales que este en
+		//la misma posicion.
 		R.onPressDo { 
 			materialesBasicos.forEach { material => 
 				if(rick.companero().posicion() == material.posicion()) {
@@ -36,21 +38,32 @@ object nivel {
 			} 
 		}	
 		
+		//Al presionar la tecla D, el compañero de Rick les da los objetos que tiene en la mochila
+		//si esta en la misma posicion.
 		D.onPressDo { 
 			if(rick.posicion() == rick.companero().posicion()) {
 				rick.companero().darObjetosA(rick)
 			} 
 		}
 		
+		//Al presionar la tecla E, Rick dice que experimentos que puede realizar con los materiales
+		//que posee en su poder.
 		E.onPressDo{game.say(rick, "" + rick.experimentosQuePuedeRealizar())}
 		
+		//Al presionar la tecla M, Rick dice que elementos contiene en su mochila. A su vez, el
+		//compañero de Rick dice que materiales tiene en su mochila tambien.   
 		M.onPressDo {
 					game.say(rick,"" + rick.mochila())
-					game.say(morty,"" + morty.elementosDeLaMochila())
+					game.say(rick.companero(),"" + rick.companero().elementosDeLaMochila())
 		}
 		
+		//Al presionar la tecla del numero 1, Rick tratara de construir una bateria.
 		NUM_1.onPressDo{rick.realizar(construirBateria)}
+		
+		//Al presionar la tecla del numero 2, Rick tratara de construir un circuito.
 		NUM_2.onPressDo{rick.realizar(construirCircuito)}
+		
+		//Al presionar la tecla del numero 3, Rick tratara de contruir un shock electrico.
 		NUM_3.onPressDo{rick.realizar(construirShockElectrico)}
 		
 		
